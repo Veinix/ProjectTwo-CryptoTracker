@@ -1,0 +1,196 @@
+/* 
+# CSS Variables
+*/
+:root {
+    --main-bg-color: white ;
+    --secondary-bg-color: #FAF9F6;
+    --main-text-color: #000000;
+    --secondary-text-color: rgba(0,0,0, 0.7);
+    --primary-color: #9FFF9F;
+    --secondary-color: #6496ED;
+    --accent-color: #84CFC2;
+}
+
+/*# Debugging Styles */
+/*! Overrides all other CSS */
+.db {
+    border: black 1px solid !important;
+}
+
+.db-1 {
+    border: red 1px solid !important;
+}
+
+.db-2 {
+    border: blue 1px solid !important;
+}
+
+.db-3 {
+    border: green 1px solid !important;
+}
+
+.hide {
+    display: none !important;
+}
+
+/*# Main CSS */
+* {
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh ;
+
+}
+
+/*# General  */
+/* Parallax background on body */
+.bg-parallax {
+    min-height: 100vh;
+    background-image:
+    url(./assets/background/blob.svg),
+    url(./assets/background/blob-1.svg),
+    url(./assets/background/blob-2.svg),
+    url(./assets/background/blob-3.svg),
+    url(./assets/background/blob-5.svg),
+    url(./assets/background/blob.svg);
+    background-attachment: fixed;
+    
+    /* x, y */
+    background-position: 
+    2% 10%,
+    5% 70%,
+    39% 20%,
+    50% 70%,
+    90% 30%,
+    90% 90%;
+
+    background-attachment: fixed;
+    background-repeat: no-repeat    ;
+    background-size: 18rem;
+}
+
+/* Class that makes the element have a white background with a gray shadow at it's bottom*/
+.box-shadow-bottom { 
+    background-color: WHITE;
+    box-shadow: 0 8px 6px -6px gray;
+}
+
+/*# Navbar */
+/* Nav pill colors */
+.nav.nav-pills > .nav-item a {
+    color: var(--main-text-color);
+}
+.nav-item > a.nav-link.active{
+    background-color: var(--primary-color);
+}
+/* Hiding the second and third section by default */
+#reportsSection, #aboutSection {
+    display: none;
+}
+
+#nav--main-container {
+    background-color: var(--main-bg-color);
+}
+/* Since we removed the href attribute from the anchor tags, we need to add the aesethic on hover */
+.nav-link {
+    cursor: pointer;
+}
+
+
+/*# Homepage */
+
+#homeSection {
+    max-width: 1650px;
+}
+#home--welcome-row {
+    border-radius: 8px;
+}
+#home--coins-container {
+    min-height: 10vh;
+}
+
+/** Coin Cards */
+.coin-card {
+    height: auto;
+    width: 13rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.coin-card--header {
+    display: flex;
+}
+.coin-card--coin-rank {
+    width: 40%;
+    height: 1.5rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    order: 1;
+    
+    background-color: var(--primary-color);
+    color: var(--main-text-color);
+}
+.coin-card--img{
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    display: block;
+    margin: 1rem auto;
+}
+.coin-card--favtoggle-div {
+    order: 2;
+    margin-left: auto;
+}
+.coin-card--favtoggle {
+    transform: scale(1.5);
+}
+.coin-card--favtoggle:hover {
+    cursor: pointer;
+}
+.coin-card--favtoggle:checked,
+.coin-card--favtoggle:focus {
+    background-color: var(--primary-color);
+    border: var(--primary-color);
+}
+.coin-card--more-info {
+    width: 8rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    background-color: var(--primary-color);
+    color: var(--main-text-color);
+}
+.coin-card--more-info:hover, .coin-card--more-info:active     {
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+
+/*# Footer */
+
+/* Shape Divider */
+.wave-divider {
+    margin-top: auto;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+
+.wave-divider svg {
+    position: relative;
+    display: block;
+    width: calc(140% + 1.3px);
+    height: 235px;
+}
+
+    .wave-divider .shape-fill {
+        fill:  url(#wave-divider--linear-gradient);
+    }
