@@ -165,10 +165,33 @@ body {
     margin: 0 auto;
     background-color: var(--primary-color);
     color: var(--main-text-color);
+    border: none;
 }
 .coin-card--more-info:hover, .coin-card--more-info:active     {
-    opacity: 0.8;
+    transition: opacity 100ms;
+    opacity: 0.5;
     cursor: pointer;
+}
+.coin-card--collapse {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+}
+.coin-card--collapse-content {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+}
+.coin-card--long-pill {
+    height: 1.5rem;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+    background-color: var(--accent-color);
+    color: var(--main-text-color);
 }
 
 
