@@ -9,19 +9,19 @@ $(() => {
     // handleHome()
 
     // # Test Functions
-    homepageTest()
+    // homepageTest()
     // Test Homepage with data from bitcoin stored locally
     async function homepageTest() {
         // Get currencies
-        const coinsList = await getJSON("https://api.coingecko.com/api/v3/coins/list");
-        // const coinsList = await getJSON("/rawdata/coins/list.json");
-        displayCoinsTest(coinsList)
+        // const coinsList = await getJSON("https://api.coingecko.com/api/v3/coins/list");
+        const coinsList = await getJSON("/rawdata/coins/list.json");
+        displayCoins(coinsList)
     }
 
     // Getting the daily prices for the last 7 days
     async function pastWeekPrices(coinID) {
-        const weekPrices = await getJSON(`https://api.coingecko.com/api/v3/coins/${coinID}/market_chart?vs_currency=usd&days=6&interval=daily`);
-        // const weekPrices = await getJSON("/rawdata/coins/market_chart.json")
+        // const weekPrices = await getJSON(`https://api.coingecko.com/api/v3/coins/${coinID}/market_chart?vs_currency=usd&days=6&interval=daily`);
+        const weekPrices = await getJSON("/rawdata/coins/market_chart.json")
         let weekHigh = weekPrices.prices[0][1];
         let weekLow = weekPrices.prices[0][1];
         for (let i = 0; i < 7; i++) {
@@ -37,18 +37,17 @@ $(() => {
     }
 
     // Getting the marketCapRank and price of the coin in USD, EUR and ILS
-    async function moreCoinData(coinID) {
-        const data = await getJSON(`https://api.coingecko.com/api/v3/coins/${coinID}?market_data=true`);
-        // const data = await getJSON("/rawdata/coins/bitcoin.json")
-        let marketCapRank = data.market_cap_rank;
+    async function handleMoreCoinData(coinID) {
+        // const data = await getJSON(`https://api.coingecko.com/api/v3/coins/${coinID}?market_data=true`);
+        const data = await getJSON("/rawdata/coins/bitcoin.json")
         let priceUSD = data.market_data.current_price.usd;
         let priceEUR = data.market_data.current_price.eur;
         let priceILS = data.market_data.current_price.ils;
-        return [priceUSD, priceEUR, priceILS, marketCapRank];
+        return [priceUSD, priceEUR, priceILS];
     }
 
     // Function to display the coins in the coin container in the homepage
-    async function displayCoinsTest(coinsList) {
+    async function displayCoins(coinsList) {
         let html = ``;
         // Bitcoin position in the list is 1123
         for (let i = 1120; i < 1124; i++) { // if i = 0, x is the max amount of cards displayed.
@@ -58,14 +57,11 @@ $(() => {
             let coinName = coinsList[i].name
             let coinSymbol = coinsList[i].symbol
 
-            // More Data: Price of coin in USD, EUR, ILS; Market Cap Ranking; Weekly High and Low
-            let moreCoinDataArr = await moreCoinData(coinID)
-            console.log(moreCoinDataArr)
+            // More Data: Price of coin in USD, EUR, ILS; Weekly High and Low
+            let moreCoinDataArr = await handleMoreCoinData(coinID)
             let priceUSD = moreCoinDataArr[0].toLocaleString();
             let priceEUR = moreCoinDataArr[1].toLocaleString();
             let priceILS = moreCoinDataArr[2].toLocaleString();
-
-            let marketCapRank = moreCoinDataArr[3]
 
             let weekHighLow = await pastWeekPrices(coinID)
             let weekHigh = weekHighLow[0].toLocaleString(); 
@@ -89,7 +85,7 @@ $(() => {
                     </div>
                     <div class="card-body d-flex flex-column justify-content-between">
                         <div class="coin-card--header">
-                            <span class="badge rounded-pill coin-card--coin-rank">Rank# ${marketCapRank}</span>
+                            <span class="badge rounded-pill coin-card--coin-rank">&nbsp;</span>
                             <div class="form-check form-switch coin-card--favtoggle-div">
                                 <input class="form-check-input coin-card--favtoggle" type="checkbox" role="switch" id="flexSwitchCheckDefault">
                             </div>
@@ -114,72 +110,6 @@ $(() => {
         $("#home--coins-container").html(html);
     }
     //# End of Test Functions ^^^^
-
-
-
-    // Function handling currencies and everything in homepage
-    async function handleHome() {
-        // Get currencies
-        // const coins = await getJSON("https://api.coingecko.com/api/v3/coins/list");
-        const coins = await getJSON("/rawdata/coins/list.json");
-        
-        // Display coins
-        displayCoins(coins);
-    }
-
-    // Function to display coins
-    async function displayCoins(coins) {
-        // Limiting length of the id
-        // coins = coins.filter(coin => coin.id.length <= 7);
-        let html = ``;
-        // const lastWeekPricesJSON = await getJSON(`https://api.coingecko.com/api/v3/coins/${coins[i].id}/market_chart?vs_currency=usd&days=6&interval=daily`)
-        // const weekPrices = lastWeekPricesJSON.prices;
-        // const weekLow = weekPrices;
-        // const weekHigh = weekPrices;
-        
-        // i < x where x is the max amount of cards I want to display.
-        for (let i = 0; i < 12; i++) {
-            // Displaying the cards
-            html += `
-            <div class="col">
-                <div class="card coin-card d-flex">
-                    <div class="collapse coin-card--collapse" id="collapse-${coins[i].id}">
-                        <div class="card card-body p-0 pt-2 coin-card--collapse-content">
-                            <span class="fw-bold mb-3">${coins[i].name} <span class="order-2 fw-bold text-black-50">${coins[i].symbol}</span></span>
-                            <span class="mb-1">High</span>
-                            <span class="mb-1">Low</span>
-                            <span class="badge rounded-pill mb-2 coin-card--long-pill"> &nbsp;</span>
-                            <span class="mb-1">USD</span>
-                            <span class="mb-1">EURO</span>
-                            <span class="pb-1">NIS</span>
-                        </div>
-                    </div>
-                    <div class="card-body d-flex flex-column justify-content-between">
-                        <div class="coin-card--header">
-                            <span class="badge rounded-pill coin-card--coin-rank">coins[i].rank</span>
-                            <div class="form-check form-switch coin-card--favtoggle-div">
-                                <input class="form-check-input coin-card--favtoggle" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                            </div>
-                        </div>
-                        
-                        <img src="https://placehold.co/100x100?text=COIN" class="coin-card--img">
-                        <h5 class="card-title mb-1 text-center">${coins[i].symbol}</h5>
-                        <h6 class="card-subtitle mb-3">${coins[i].name}</h6>
-
-                        
-                    </div>
-                    <div class="card-footer">
-                        <button class="badge coin-card--more-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${coins[i].id}">
-                            More Info
-                        </button>
-                    </div>
-                </div>
-                </div>
-            `;
-        }
-                   
-        $("#home--coins-container").html(html);
-    }
 
     // Getting moreInfo's data
     async function handleMoreInfo(coinId){

@@ -77,6 +77,46 @@ body {
     box-shadow: 0 8px 6px -6px gray;
 }
 
+/* Loading Message */
+.loading-container {
+    width: 10rem;
+    height: 100px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 10px;
+    box-shadow: 0px 0px 8px 2px gray;
+    border-radius: 10px;
+    background-color: var(--secondary-bg-color);
+}
+.loading-spinner {  
+    width: 60px;  
+    height: 60px;
+    border: 8px solid rgba(189,189,189 ,0.25);
+    border-bottom-color: var(--primary-color);
+    border-left-color: var(--accent-color); 
+    border-top-color: var(--secondary-color);
+    border-radius: 50%;
+    animation: rotate 700ms infinite linear;
+}
+
+
+@keyframes rotate {
+    to { transform: rotate(1turn);}
+}
+
+@keyframes fadeOut {
+    to { opacity: 0;}
+}
+
+@keyframes fadeIn {
+    from { opacity: 0;}
+    to { opacity: 1;}
+}
+
 /*# Navbar */
 /* Nav pill colors */
 .nav.nav-pills > .nav-item a {
@@ -123,7 +163,7 @@ body {
     display: flex;
 }
 .coin-card--coin-rank {
-    width: 40%;
+    width: 70%;
     height: 1.5rem;
 
     display: flex;
