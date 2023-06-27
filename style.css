@@ -153,7 +153,7 @@ body {
 
 /** Coin Cards */
 .coin-card {
-    height: auto;
+    height: 19.25rem;
     width: 13rem;
     display: flex;
     flex-direction: column;
@@ -163,7 +163,7 @@ body {
     display: flex;
 }
 .coin-card--coin-rank {
-    width: 70%;
+    width: 60%;
     height: 1.5rem;
 
     display: flex;
@@ -225,13 +225,31 @@ body {
 }
 .coin-card--long-pill {
     height: 1.5rem;
-    width: 80%;
+    width: 70%;
     display: flex;
     justify-content: center;
     align-self: center;
     align-items: center;
-    background-color: var(--accent-color);
-    color: var(--main-text-color);
+    background-color: var(--secondary-color);
+}
+
+.coin-card--collapse .loading-container {
+    box-shadow: none;
+    height: 16rem;
+}
+
+.card-body h3 {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    width: 5rem;
+    height: 5rem;
+
+    border-radius: 50%;
+    background-color: var(--secondary-color);
+    color: white;
 }
 
 
