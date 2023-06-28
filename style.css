@@ -244,10 +244,10 @@ body {
     justify-content: center;
     align-items: center;
     
-    width: 5rem;
+    width: 10rem;
     height: 5rem;
 
-    border-radius: 50%;
+    border-radius: 25px;
     background-color: var(--secondary-color);
     color: white;
 }
