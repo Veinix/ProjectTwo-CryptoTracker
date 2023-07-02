@@ -11,28 +11,6 @@
     --accent-color: #84CFC2;
 }
 
-/*# Debugging Styles */
-/*! Overrides all other CSS */
-.db {
-    border: black 1px solid !important;
-}
-
-.db-1 {
-    border: red 1px solid !important;
-}
-
-.db-2 {
-    border: blue 1px solid !important;
-}
-
-.db-3 {
-    border: green 1px solid !important;
-}
-
-.hide {
-    display: none !important;
-}
-
 /*# Main CSS */
 * {
     font-family: sans-serif;
@@ -41,7 +19,6 @@
 
 body {
     min-height: 100vh ;
-
 }
 
 /*# General  */
@@ -49,12 +26,12 @@ body {
 .bg-parallax {
     min-height: 100vh;
     background-image:
-    url(./assets/background/blob.svg),
-    url(./assets/background/blob-1.svg),
-    url(./assets/background/blob-2.svg),
-    url(./assets/background/blob-3.svg),
-    url(./assets/background/blob-5.svg),
-    url(./assets/background/blob.svg);
+    url(./assets/images/blob.svg),
+    url(./assets/images/blob-1.svg),
+    url(./assets/images/blob-2.svg),
+    url(./assets/images/blob-3.svg),
+    url(./assets/images/blob-5.svg),
+    url(./assets/images/blob.svg);
     background-attachment: fixed;
     
     /* x, y */
@@ -126,7 +103,7 @@ body {
     background-color: var(--primary-color);
 }
 /* Hiding the second and third section by default */
-#reportsSection, #aboutSection {
+#homeSection, #reportsSection, #aboutSection {
     display: none;
 }
 
@@ -186,6 +163,7 @@ body {
     margin-left: auto;
 }
 .coin-card--favtoggle {
+    
     transform: scale(1.5);
 }
 .coin-card--favtoggle:hover {
@@ -217,12 +195,6 @@ body {
     z-index: 1;
     width: 100%;
 }
-.coin-card--collapse-content {
-    position: relative;
-
-    display: flex;
-    flex-direction: column;
-}
 .coin-card--long-pill {
     height: 1.5rem;
     width: 70%;
@@ -232,24 +204,42 @@ body {
     align-items: center;
     background-color: var(--secondary-color);
 }
-
 .coin-card--collapse .loading-container {
     box-shadow: none;
     height: 16rem;
 }
-
-.card-body h3 {
+.coin-card--title-container {
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10rem;
+    height: 6rem;
+    border-radius: 25px;
+    background-color: var(--secondary-color);
+    color: white;
+}
+.coin-card--subtitle-container {
     margin: 0 auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    width: 10rem;
+    max-width: fit-content;
     height: 5rem;
-
-    border-radius: 25px;
-    background-color: var(--secondary-color);
-    color: white;
+}
+.coin-card--title-container > h3,
+.coin-card--subtitle-container > h4 {
+    margin: 0;
+}
+.collapse-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.collapse-content--header {
+    width: 12.75rem;
+    height: 1.5rem;
 }
 
 

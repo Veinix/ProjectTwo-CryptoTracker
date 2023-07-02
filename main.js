@@ -1,10 +1,10 @@
-/// <reference path="jquery-3.7.0.js"/>
+/// <reference path="./assets/library/jquery-3.7.0.js"/>
 
 "use strict";
 
 //# Main JS
 $(() => {
-    //TODO On page refresh, display goes to the Home Page (Which is index.html). Implement local storage or cache to keep current page
+    
     /**
      * Handles all processes related to the homepage.
      * 
@@ -16,32 +16,11 @@ $(() => {
      * 
      */
     async function handleHome() {
-        const coinsList = await retrieveCoinList();
+        const url = "https://api.coingecko.com/api/v3/coins/list";
+        const coinsList = await timestampHandler("CoinsList", url);
         displayCoins(coinsList)
     }
 
-    /**
-     * Retrieves `"Coin List"` data.
-     * 
-     * Called by the `handleHome` function
-     * 
-     * @returns {{}} Object containing coins
-     * 
-     * {@link getJSON}, {@link handleHome}, {@link timestampHandler}
-    */
-    async function retrieveCoinList() {
-        if (lcl.retrieve("CoinsList") === null) {
-            const coins = await getJSON("https://api.coingecko.com/api/v3/coins/list")
-            const timeStamp = Date.now();
-            lcl.store("CoinsList", [coins, timeStamp])
-            
-            const coinsList = lcl.retrieve("CoinsList");
-            return coinsList[0];
-        } else {
-            const url = "https://api.coingecko.com/api/v3/coins/list";
-            return timestampHandler("CoinsList", url);
-        }
-    }
 
     /**
      * Handles requests for more coin data such as price in USD or Thumbnail then displays the data in the correct container
@@ -53,36 +32,40 @@ $(() => {
      * {@link timestampHandler}
      */
     async function handleMoreCoinData(coinID) {
-        let moreData;
-
-        if (lcl.retrieve(`moreInfo-${coinID}`) === null) {
-            const coinData = await getJSON(`https://api.coingecko.com/api/v3/coins/${coinID}?market_data=true`);
-            const timeStamp = Date.now();
-            lcl.store(`moreInfo-${coinID}`, [coinData, timeStamp]);
-            moreData = (lcl.retrieve(`moreInfo-${coinID}`))[0];
-        } else {
-            const url = `https://api.coingecko.com/api/v3/coins/${coinID}?market_data=true`;
-            moreData = await timestampHandler(`moreInfo-${coinID}`, url)
-        }
+        const url = `https://api.coingecko.com/api/v3/coins/${coinID}?market_data=true`;
+        let moreData = await timestampHandler(`moreInfo-${coinID}`, url)
 
         // Paths to the prices and image
-        const priceUSD = moreData.market_data.current_price.usd;
-        const priceEUR = moreData.market_data.current_price.eur;
-        const priceILS = moreData.market_data.current_price.ils;
+        const priceUSD = moreData.market_data?.current_price.usd ?? "N/A";
+        const priceEUR = moreData.market_data?.current_price.eur ?? "N/A";
+        const priceILS = moreData.market_data?.current_price.ils ?? "N/A";
         const coinImgSrc = moreData.image.large;
-        
+
+        let coinSymbol = moreData.symbol;
+        let coinName = moreData.name;
+
         const moreInfo = `
-        <div class="card card-body p-0 pt-1 coin-card--collapse-content">
-        <span class="fw-bold mb-0">${moreData.id} <span class="order-2 fw-bold text-black-50">${moreData.symbol}</span></span>
-        <img src="${coinImgSrc}" class="coin-card--img">
-        <span class="badge rounded-pill mb-2 coin-card--long-pill"> Current Price </span>
-        <span class="mb-1">${priceUSD.toLocaleString("en-us",{style:"currency",currency:"USD",maximumFractionDigits:20})}</span>
-        <span class="mb-1">${priceEUR.toLocaleString("en-us",{style:"currency",currency:"EUR",maximumFractionDigits:20})}</span>
-        <span class="pb-1">${priceILS.toLocaleString("en-us",{style:"currency",currency:"ILS",maximumFractionDigits:20})}</span>
+        <div class="card card-body p-0 pt-1 collapse-content">
+            <div class="collapse-content--header">
+                <span class="fw-bold mb-0" id="collapseheader-${coinID}">${coinName} <span class="order-2 fw-bold text-black-50" id="collapsesubheader-${coinID}">${coinSymbol}</span></span>
+            </div>
+            <img src="${coinImgSrc}" class="coin-card--img">
+            <span class="badge rounded-pill mb-2 coin-card--long-pill"> Current Price </span>
+            <span class="mb-1">${priceUSD.toLocaleString("en-us", { style: "currency", currency: "USD", maximumFractionDigits: 20 })}</span>
+            <span class="mb-1">${priceEUR.toLocaleString("en-us", { style: "currency", currency: "EUR", maximumFractionDigits: 20 })}</span>
+            <span class="pb-1">${priceILS.toLocaleString("en-us", { style: "currency", currency: "ILS", maximumFractionDigits: 20 })}</span>
         </div>`;
 
         $(`#collapse-${coinID}`).html(moreInfo);
+
+        resizeText(`#collapseheader-${coinID}`)
+        resizeText(`#collapsesubheader-${coinID}`)
     }
+    // On "More Info" click, gets more information with the ID of the coin.
+    $("#home--coins-container").on("click", ".badge.coin-card--more-info", async function () {
+        const coinID = $(this).attr("id").substring(9);
+        await handleMoreCoinData(coinID);
+    })
 
     /**
      * Function to display the coins in the coin container on the homepage
@@ -94,19 +77,17 @@ $(() => {
      * {@link handleHome}
      */
     async function displayCoins(coinsList) {
-        // Getting random coins every time the list is displayed
-        let randEnd = Math.floor(Math.random()*9949)+1
-        let randStart = randEnd - 100;
-
+        // Setting range of coins. Bitcoin is around 1114
+        let end = 1214;
+        let start = 1114;
+        // Variable to hold the HTML content
         let html = ``;
-        // Bitcoin position in the list is 1123
-        for (let i = 0; i < 1; i++) { // if i = 0, x is the max amount of cards displayed.
-            
+
+        for (let i = start; i < end; i++) {
+
             let coinID = coinsList[i].id
             let coinName = coinsList[i].name
             let coinSymbol = coinsList[i].symbol
-
-            resizeText(coinID)
 
             html += `
             <div class="col">
@@ -122,11 +103,17 @@ $(() => {
                         <div class="coin-card--header">
                             <span class="badge rounded-pill coin-card--coin-rank">&nbsp;</span>
                             <div class="form-check form-switch coin-card--favtoggle-div">
-                                <input class="form-check-input coin-card--favtoggle" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                                <input class="form-check-input coin-card--favtoggle" type="checkbox" id="switch-${coinID}">
                             </div>
                         </div>
-                        <h3 class="my-3 text-center" id="title-${coinID}">${coinSymbol}</h3>
-                        <h4 class="mt-4" id="subtitle-${coinID}">${coinName}</h4>
+                        <div class="mt-3 d-flex flex-column">
+                            <div class="mb-2 coin-card--title-container">
+                                <h3 id="title-${coinID}">${coinSymbol}</h3>
+                            </div>
+                            <div class="coin-card--subtitle-container">
+                                <h4 id="subtitle-${coinID}">${coinName}</h4>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="card-footer">
@@ -137,9 +124,32 @@ $(() => {
                 </div>
                 </div>
             `;
+
         }
-                
+
+        // Displaying the cards
         $("#home--coins-container").html(html);
+
+        // Resizes the text of the coin ID and the coin name in the card, if it's too large for the container
+        for (let i = start; i < end; i++) {
+            let coinID = coinsList[i].id
+            resizeText("#title-" + coinID);
+            resizeText("#subtitle-" + coinID);
+
+        }
+
+        // Shows that favorites are selected (Keeping them toggled after refresh)
+        for (let i = start; i < end; i++) {
+            let favListArr = lcl.retrieve("favlist")
+            if (!favListArr) return;
+            for (let j = 0; j < favListArr.length; j++) {
+                const storedCoinID = favListArr[j][0]
+                let coinID = coinsList[i].id
+                if (storedCoinID === coinID) {
+                    $(`#switch-${coinID}`).prop("checked", !($(`#switch-${coinID}`).prop("checked")));
+                }
+            }
+        }
     }
 
     /**
@@ -155,15 +165,23 @@ $(() => {
      * @returns Requested entry
      */
     async function timestampHandler(entry, url) {
-        const oldTimestamp =  (lcl.retrieve(entry))[1];
-        const currentTime = Date.now();
-        const timeElapsed = (currentTime - oldTimestamp) / 1000;
-    
-        if (timeElapsed >= 120) { 
+        if (lcl.retrieve(entry) === null) {
             const data = await getJSON(url);
             const newTimestamp = Date.now();
             lcl.store(entry, [data, newTimestamp])
-        
+
+            return (lcl.retrieve(entry))[0];
+        }
+
+        const oldTimestamp = (lcl.retrieve(entry))[1];
+        const currentTime = Date.now();
+        const timeElapsed = (currentTime - oldTimestamp) / 1000;
+
+        if (timeElapsed >= 120) {
+            const data = await getJSON(url);
+            const newTimestamp = Date.now();
+            lcl.store(entry, [data, newTimestamp])
+
             return (lcl.retrieve(entry))[0];
 
         } else return (lcl.retrieve(entry))[0];
@@ -182,28 +200,57 @@ $(() => {
     async function getJSON(url) {
         return $.ajax({
             url: url,
-            dataType: 'json'})
-        .done(()=> console.count("API Calls")); 
+            dataType: 'json'
+        })
     }
 
     /**
-     * Function to resize a text element that is too long for it's container or position
+     * Function to resize a text element that is too large for it's container or position
      * 
-     * @param {string} id ID of the element
+     * @param {string} elementSelector ID of the element
      */
-    function resizeText(id) {
-        const textElement = $(`#${id}`);
-        const containerWidth = textElement.innerWidth(); // Using innerWidth to include padding
-        const textWidth = textElement.scrollWidth;
+    function resizeText(elementSelector) {
+        
+        const textElement = $(elementSelector);
+        const containerHeight = textElement.parent().innerHeight();
+        const containerWidth = textElement.parent().innerWidth();
+        const originalFontSize = parseFloat(textElement.css('font-size'));
+        let newFontSize = originalFontSize;
 
-        if (textWidth > containerWidth) {
-        const fontSize = parseInt(textElement.css("font-size"));
-        const newFontSize = fontSize * (containerWidth / textWidth);
-        textElement.css("font-size", newFontSize + "px");
+        const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
+
+        // Decrease font size until text fits within container height
+        try {
+            while (textElement[0].scrollHeight > containerHeight) {
+                newFontSize -= 1;
+                textElement.css('font-size', `${newFontSize / rootFontSize}rem`);
+            }
+
+            // Decrease font size until text fits within container height
+            while (textElement[0].scrollWidth > containerWidth) {
+                newFontSize -= 1;
+                textElement.css('font-size', `${newFontSize / rootFontSize}rem`);
+            }
+        } catch (err) {
+            console.log(elementSelector, "\n" + err)
+            // TODO Remove from display the coin cards that give errors
         }
     }
 
     // Nav Pills Functionality
+    // Checking if the selected section is saved, if not, default is homeSection
+    $("a.nav-link").removeClass("active");
+    $("section").removeClass("d-flex").hide();
+
+    const selectedSection = lcl.retrieve("selectedSection");
+    if (selectedSection) {
+        $(`a.nav-link[data-section="${selectedSection}"]`).addClass("active");
+        $("#" + selectedSection).addClass("d-flex").show();
+    } else {
+        $(`a.nav-link[data-section="homeSection"]`).addClass("active");
+        $("#homeSection").addClass("d-flex").show();
+    }
+
     $("a.nav-link").on("click", function () {
         // Changing which tab is highlighted
         $("a.nav-link").removeClass("active");
@@ -215,24 +262,128 @@ $(() => {
         $("section").hide();
         $("#" + sectionID).addClass("d-flex");
         $("#" + sectionID).show();
-    })
 
-    // On "More Info" click, gets more information with the ID of the coin.
-    $("#home--coins-container").on("click", ".badge.coin-card--more-info", async function(){
-        const coinID = $(this).attr("id").substring(9);
-        await handleMoreCoinData(coinID);
+        // Keeping selected section on refresh
+        lcl.store("selectedSection", sectionID)
     })
 
     // On click of the nav-tabs, perform action according to the tab
     $("#homeLink").click(async () => await handleHome());
-    $("#reportsLink").click(() => {console.log("Reports Clicked")})
-    $("#aboutLink").click(() => {console.log("About Clicked")})
-
-    // Reset API Calls counter every 30 seconds
-    setInterval(console.countReset("API Calls"), 30000);
+    $("#reportsLink").click(() => { console.log("Reports Clicked") })
+    $("#aboutLink").click(() => { console.log("About Clicked") })
 
     //# On page load
     handleHome()
+
+    $("#home--coins-container").on("change", ".form-check-input.coin-card--favtoggle", async function () {
+        const coinID = $(this).attr("id").substring(7);
+        const coinName = $(`#subtitle-${coinID}`).html()
+        const coinInfo = [coinID, coinName];
+
+        const that = $(this)
+        favoritesHandler(coinInfo, that)
+    })
+
+    function favoritesHandler(coinInfo, that) {
+
+        let favListArr = lcl.retrieve("favlist")
+        if (!favListArr) {
+            favListArr = []
+            lcl.store("favlist", favListArr)
+        }
+
+        // If more than 5 switches are on, the sixth switch should trigger the modal
+        if ($("input:checked").length > 5) {
+            return favoriteModalHandler(favListArr, that);
+        }
+
+        // When the switch is switched on, push it to the array, otherwise remove it from the array
+        if (that.is(':checked')) {
+            favListArr.push(coinInfo);
+        } else {
+            const index = favListArr.indexOf(coinInfo)
+            favListArr.splice(index, 1)
+        }
+
+        // Update the array in storage
+        lcl.store("favlist", favListArr)
+    }
+    // TODO Add more stylings and buttons to the list in the modal, add the ability to edit the fav list and store it in storage
+    function favoriteModalHandler(favListArr, that) {
+
+        // Adding the rows of coins in the favList to the list
+        let html = ``;
+        for (let i = 0; i < favListArr.length; i++) {
+            const coin = favListArr[i];
+            html += `
+                <li class="list-group-item container">
+                    <div class="row">
+                        <div class="col-10"> 
+                            <span> ${coin[1]} </span> 
+                        </div>
+                        <div class="col-2">
+                            <input class="form-check-input" type="checkbox" id="favcheck-${coin[0]}" value="${coin[0]}" checked="true">
+                        </div>
+                    </div>
+                </li>
+            `
+        }
+
+        // Adding the last selected coin (Because it is not saved to the favlist)
+        const coinID = $(that).attr("id").substring(7);
+        const coinName = $(`#subtitle-${coinID}`).html()
+        html += `
+        <li class="list-group-item bg-secondary-subtle container">
+            <div class="row">
+                <div class="col-10"> 
+                    <span> ${coinName} </span> 
+                </div>
+                <div class="col-2">
+                    <input class="form-check-input" type="checkbox" id="favcheck-${coinID}" value="${coinID}" checked="true">
+                </div>
+            </div>
+        </li>
+        `
+
+        // Updating the innerHTML of the list container
+        $("#favoritesModal").find(".list-group.list-group-flush").html(html);
+
+        // Displaying the modal
+        $("#favoritesModal").modal("toggle");
+    }
+
+    // Clicking discard, Modal not saving the changes, unchecking the last selected
+    $("#favoritesModal").on("click", "*.modal-discard", function () {
+        const checkedCheckboxes = $('#home--coins-container input[type="checkbox"]:checked');
+        if (checkedCheckboxes.length > 5) {
+            const checkboxID = checkedCheckboxes[checkedCheckboxes.length - 1].id;
+            $(`#${checkboxID}`).prop("checked", false)
+        }
+    })
+
+    // Clicking save, Modal saving the changes, and updating favListArr
+    $(".modal-footer").on("click", "#modal-save", function () {
+        const favlistArr = lcl.retrieve("favlist")
+
+        // Get the values of the unchecked boxes and remove from the favlistArr array
+        const uncheckedCheckboxes = $('#favListContainer input[type="checkbox"]:not(:checked)')
+        $(uncheckedCheckboxes).each(function () {
+           const coinID = $(this).attr("value")
+           $(`#switch-${coinID}`).prop("checked", false)
+           favlistArr.forEach(favCoinData => {
+                if (coinID === favCoinData[0]) {
+                    const index = favlistArr.indexOf(favCoinData)
+                    favlistArr.splice(index, 1)
+                }
+           });
+        })
+
+        // Updating the list in storage
+        lcl.store("favlist",favlistArr)       
+
+        // Hiding modal
+        $("#favoritesModal").modal("toggle");
+    }) 
+    
 });
 
-    

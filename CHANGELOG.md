@@ -1,5 +1,7 @@
 # Changelog
 
+[Progress](./PROGRESS.md)
+
 All notable changes to this project will be documented in this file
 
 ## Legend
