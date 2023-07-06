@@ -6,6 +6,15 @@ This project's purpose is to take crypto data from the [Coin Gecko API](https://
 
 This is my second project while at John Bryce - studying web development.
 
+## Features
+
+- **Home Page**: Displays a list of cryptocurrencies with their symbols and names. Users can click on the "More Info" button to view additional information about a specific coin, such as its current price.
+- **Search**: Users can search for coins by entering the coin symbol or name in the search bar.
+- **Live Reports**: Provides real-time updates and charts for the selected cryptocurrency.
+- **Favorites**: Users can mark coins as favorites to easily track their prices and receive notifications.
+
+***More detailed information on features coming soon***
+
 ## Design Process and Methodology
 
 Since I am using Bootstrap to design this project, I am using a mobile-first design methodology. To get an idea of the layout of how I want to have the elements displayed on a page I made sketches in Google Drawings corresponding to the different items I was creating. For the different functions, I used draw.io to create a rough sketch of what the functions does and how it works.
@@ -22,37 +31,14 @@ Every element in the page is displayed using containers or blocks. They also mus
 
 ***Coming Soon***
 
-## Features
+## Installation and Usage
 
-- **Home Page**: Displays a list of cryptocurrencies with their symbols and names. Users can click on the "More Info" button to view additional information about a specific coin, such as its current price.
-- **Search**: Users can search for coins by entering the coin symbol or name in the search bar.
-- **Live Reports**: Provides real-time updates and charts for the selected cryptocurrency.
-- **Favorites**: Users can mark coins as favorites to easily track their prices and receive notifications.
+To run the Crypto Tracker app locally, follow these steps:
 
-## Installation
-
-To run the Crypto Tracker application locally, follow these steps:
-
-1. Clone the repository: `git clone https://github.com/your-username/crypto-tracker.git`
-2. Navigate to the project directory: `cd crypto-tracker`
+1. Clone the repository: `git clone https://github.com/Veinix/crypto-tracker.git`
+2. Navigate to the project directory
 3. Open the `index.html` file in a web browser.
-
-## Usage
-
-1. Open the application in your web browser.
-2. Explore the list of cryptocurrencies on the home page.
-3. Use the search bar to find specific coins by symbol or name.
-4. Click on a coin to view detailed information and live reports.
-5. Add coins to your favorites list to track their prices.
-
-## Customization
-
-The Crypto Tracker application is built using jQuery and a personal library. To customize the project, follow these steps:
-
-1. Open the project directory in your preferred code editor.
-2. Navigate to the `scripts` folder and locate the personal library file (`personal-library.js`).
-3. Modify the library functions to suit your needs.
-4. Save the changes and refresh the application in your web browser to see the updates.
+4. Explore and enjoy!
 
 ## Contributing
 
@@ -66,7 +52,8 @@ Contributions are welcome! If you'd like to contribute to Crypto Tracker, please
 
 ## Known Bugs
 
-- Coins with a long name or long ID (Fan coins, real estate coins etc) do not appear correctly in the more-info tab of the coin
+- Too many calls being made causes the API to temporarily block the IP
+- Coins with very long ids or names don't display correctly
 
 ## License
 

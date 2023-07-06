@@ -2,13 +2,17 @@
 # CSS Variables
 */
 :root {
-    --main-bg-color: white ;
+    --primary-bg-color: #ffffff;
     --secondary-bg-color: #FAF9F6;
-    --main-text-color: #000000;
-    --secondary-text-color: rgba(0,0,0, 0.7);
-    --primary-color: #9FFF9F;
-    --secondary-color: #6496ED;
-    --accent-color: #84CFC2;
+    --primary-text-color: #000000;
+    --accent-text-color:  #00000099;
+    --secondary-text-color: #ffffff;
+  
+    --primary-color: #A2FF86;
+    --primary-accent-color: #164B60;
+    --secondary-color: #1B6B93;
+    --secondary-accent-color: #4FC0D0;
+
 }
 
 /*# Main CSS */
@@ -44,13 +48,13 @@ body {
     90% 90%;
 
     background-attachment: fixed;
-    background-repeat: no-repeat    ;
+    background-repeat: no-repeat;
     background-size: 18rem;
 }
 
 /* Class that makes the element have a white background with a gray shadow at it's bottom*/
 .box-shadow-bottom { 
-    background-color: WHITE;
+    background-color: white;
     box-shadow: 0 8px 6px -6px gray;
 }
 
@@ -73,13 +77,13 @@ body {
     width: 60px;  
     height: 60px;
     border: 8px solid rgba(189,189,189 ,0.25);
+    border-top-color: var(--primary-accent-color);
+    border-right-color: var(--secondary-accent-color);
     border-bottom-color: var(--primary-color);
-    border-left-color: var(--accent-color); 
-    border-top-color: var(--secondary-color);
+    border-left-color: var(--secondary-color);
     border-radius: 50%;
     animation: rotate 700ms infinite linear;
 }
-
 
 @keyframes rotate {
     to { transform: rotate(1turn);}
@@ -96,11 +100,15 @@ body {
 
 /*# Navbar */
 /* Nav pill colors */
-.nav.nav-pills > .nav-item a {
-    color: var(--main-text-color);
+.nav-pills > .nav-item a {
+    color: var(--accent-text-color);
+}
+.nav-pills > .nav-item a:hover {
+    color: var(--primary-text-color);
 }
 .nav-item > a.nav-link.active{
     background-color: var(--primary-color);
+    color: var(--primary-text-color)
 }
 /* Hiding the second and third section by default */
 #homeSection, #reportsSection, #aboutSection {
@@ -108,16 +116,27 @@ body {
 }
 
 #nav--main-container {
-    background-color: var(--main-bg-color);
+    background-color: var(--primary-bg-color);
 }
 /* Since we removed the href attribute from the anchor tags, we need to add the aesethic on hover */
 .nav-link {
     cursor: pointer;
 }
 
+#home--welcome-row button {
+    color: var(--accent-text-color);
+    border-color: var(--accent-text-color);
+}
+
+#home--welcome-row button:hover,
+#home--welcome-row button:active {
+    color: var(--primary-text-color);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
 
 /*# Homepage */
-
 #homeSection {
     max-width: 1650px;
 }
@@ -128,7 +147,45 @@ body {
     min-height: 10vh;
 }
 
-/** Coin Cards */
+/* Back to Top button */
+#scrollTop-button {
+    display: none;
+    position: fixed;
+    bottom: 20px; 
+    right: 30px; 
+    z-index: 99; 
+    color: var(--accent-text-color);
+    border-color: var(--accent-text-color);
+    background-color: var(--primary-bg-color); 
+    cursor: pointer; 
+    padding: 10px; 
+    border-radius: 10px; 
+}
+
+#scrollTop-button:hover {
+    color: var(--primary-text-color); 
+    border-color: var(--primary-color);
+    background-color: var(--primary-color); 
+}
+/* Modal */
+/** Discard button */
+div.modal-footer button:first-child {
+    color: var(--secondary-text-color);
+    background-color: var(--primary-accent-color);
+    border-color: var(--primary-accent-color);
+}
+/** Save Button  */
+div.modal-footer button:last-child[disabled] {
+    opacity: 0.5;
+}
+
+div.modal-footer button:last-child {
+    color: var(--primary-text-color);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Coin Cards */
 .coin-card {
     height: 19.25rem;
     width: 13rem;
@@ -148,8 +205,8 @@ body {
     align-items: center;
     order: 1;
     
-    background-color: var(--primary-color);
-    color: var(--main-text-color);
+    background-color: var(--secondary-color);
+    color: var(--primary-text-color);
 }
 .coin-card--img{
     width: 5rem;
@@ -163,7 +220,6 @@ body {
     margin-left: auto;
 }
 .coin-card--favtoggle {
-    
     transform: scale(1.5);
 }
 .coin-card--favtoggle:hover {
@@ -182,8 +238,9 @@ body {
     align-items: center;
     margin: 0 auto;
     background-color: var(--primary-color);
-    color: var(--main-text-color);
+    color: var(--primary-text-color);
     border: none;
+    font-size: small;
 }
 .coin-card--more-info:hover, .coin-card--more-info:active     {
     transition: opacity 100ms;
@@ -202,7 +259,7 @@ body {
     justify-content: center;
     align-self: center;
     align-items: center;
-    background-color: var(--secondary-color);
+    background-color: var(--primary-accent-color);
 }
 .coin-card--collapse .loading-container {
     box-shadow: none;
@@ -217,7 +274,7 @@ body {
     width: 10rem;
     height: 6rem;
     border-radius: 25px;
-    background-color: var(--secondary-color);
+    background-color: var(--secondary-accent-color);
     color: white;
 }
 .coin-card--subtitle-container {
@@ -262,6 +319,6 @@ body {
     height: 235px;
 }
 
-    .wave-divider .shape-fill {
-        fill:  url(#wave-divider--linear-gradient);
-    }
+.wave-divider .shape-fill {
+    fill:  url(#wave-divider--linear-gradient);
+}

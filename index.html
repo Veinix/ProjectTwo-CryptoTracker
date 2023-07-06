@@ -7,20 +7,19 @@
     <!-- CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="./CSS/main.css">
     <!-- Using jQuery, and Boostrap js libraries -->
-    <script src="./assets/library/jquery-3.7.0.js"></script>
+    <script src="./JS/jquery-3.7.0.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
-    <script src="./assets/library/aviStorage.js"></script> <!-- Personal Module -->
-    <script src="main.js"></script>
+    <script src="./JS/simpleLocal.js"></script>
+    <script src="./JS/main.js"></script>
     <link rel="shortcut icon" href="/assets/favicon/favicon.ico?=CryptoProject" type="image/x-icon">
     <title>Crypto Tracker</title>
 </head>
 
 <body class="d-flex flex-column pt-5 bg-parallax">
-
     <!-- Navbar -->
     <nav class="navbar fixed-top navbar-expand-lg box-shadow-bottom" id="nav--main-container">
         <div class="container-fluid">
@@ -34,25 +33,15 @@
                 <!-- Nav pills -->
                 <ul class="nav justify-content-center nav-pills">
                     <li class="nav-item">
-                        <a id="homeLink" class="nav-link" data-section="homeSection">Home</a>
+                        <a id="homeLink" class="nav-link" data-section="homeSection" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a id="reportsLink" class="nav-link" data-section="reportsSection">Live Reports</a>
+                        <a id="reportsLink" class="nav-link" data-section="reportsSection" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">Live Reports</a>
                     </li>
                     <li class="nav-item">
-                        <a id="aboutLink" class="nav-link" data-section="aboutSection">About</a>
+                        <a id="aboutLink" class="nav-link" data-section="aboutSection" data-bs-toggle="collapse" data-bs-target=".navbar-collapse.show">About</a>
                     </li>
                 </ul>
-
-                <!-- Search bar -->
-                <form class="d-flex justify-content-end ms-md-2 ps-md-5 pt-2" role="search">
-                    <div class="input-group">
-                        <span class="input-group-text" id="basic-addon1">#</span>
-                        <input class="form-control me-2" type="search" placeholder="Search coins">
-                    </div>
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-
 
             </div>
         </div>
@@ -61,10 +50,13 @@
 
     <main>
 
-        <!-- Modal Window for favorite coins -->
+        <!-- Back to Top Button -->
+        <button class="btn" id="scrollTop-button">Back to top</button>
+
+        <!-- Modal Window for favorited coins -->
         <div class="modal fade" id="favoritesModal" data-bs-backdrop="static"
             data-bs-keyboard="false" tabindex="-1">
-            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h2 class="modal-title fs-5" id="staticBackdropLabel">You have selected too many favorites</h2>
@@ -80,8 +72,8 @@
 
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary modal-discard" data-bs-dismiss="modal">Discard Changes</button>
-                        <button type="button" class="btn btn-primary" id="modal-save">Save Changes</button>
+                        <button type="button" class="btn modal-discard" data-bs-dismiss="modal">Discard Changes</button>
+                        <button type="button" class="btn" id="modal-save" disabled>Save Changes</button>
                     </div>
                 </div>
             </div>
@@ -97,12 +89,12 @@
                         favorite up to five different coins to track them!</p>
 
                     <!-- Searchbar -->
-                    <form class="d-flex justify-content-center " role="search">
+                    <form class="d-flex justify-content-center searchbar-container" role="search">
                         <div class="input-group w-50">
                             <span class="input-group-text" id="basic-addon1">#</span>
                             <input class="form-control me-2" type="search" placeholder="Coin ID">
                         </div>
-                        <button class="btn btn-outline-success" type="submit">Search</button>
+                        <button class="btn" type="submit">Search</button>
                     </form>
 
                 </div>
@@ -111,7 +103,7 @@
 
             <!-- Coins get displayed inside the child of this container -->
             <div class="container">
-                <div class="row row-cols-auto row-cols-md-3 row-cols-lg-5 g-4 justify-content-center"
+                <div class="row row-cols-auto row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 g-4 justify-content-center"
                     id="home--coins-container">
 
                     <!-- While there are no coins, a loading card is displayed. Gets removed when the content loads because the JS changes the html of the container -->
@@ -129,14 +121,30 @@
         <!-- Reports, containing the graph and other data about the favorited coins -->
         <section id="reportsSection" class="container flex-column align-items-center row-gap-2">
             <div class="row my-3 py-3" id="reports--main-row">
-                <h2> Reports </h2>
+                <div class="col justify-content-center text-center">
+                    
+                    <h2> Reports </h2>
+                    <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                        <span class="pt-2"> Loading...</span>
+                    </div>
+                    
+                </div>
             </div>
         </section>
 
         <!-- About page, information about myself -->
         <section id="aboutSection" class="container flex-column align-items-center row-gap-2">
             <div class="row my-3 py-3" id="about--main-row">
-                <h2> About </h2>
+                <div class="col justify-content-center text-center">
+
+                    <h2> About </h2>
+                    <div class="loading-container">
+                        <div class="loading-spinner"></div>
+                        <span class="pt-2"> Loading...</span>
+                    </div>
+
+                </div>
             </div>
         </section>
     </main>

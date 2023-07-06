@@ -1,36 +1,22 @@
-/// <reference path="./assets/library/jquery-3.7.0.js"/>
+/// <reference path="jquery-3.7.0.js"/>
 
 "use strict";
 
 //# Main JS
 $(() => {
     
-    /**
-     * Handles all processes related to the homepage.
-     * 
-     * Assigns the value returned from the `loadCoinList` function to the constant `coinsList` and then displays it using the `displayCoins(coinsList)` function
-     * 
-     * Called on page load
-     *  
-     * {@link retrieveCoinList}, {@link displayCoins}
-     * 
-     */
+    // Handles all processes related to the homepage.
+    // Assigns the value returned from the `loadCoinList` function to the constant `coinsList` and then displays it using the `displayCoins(coinsList)` function
+    // Called on page load
     async function handleHome() {
         const url = "https://api.coingecko.com/api/v3/coins/list";
-        const coinsList = await timestampHandler("CoinsList", url);
+        const coinsList = await timestampHandler("coinsList", url);
         displayCoins(coinsList)
     }
 
 
-    /**
-     * Handles requests for more coin data such as price in USD or Thumbnail then displays the data in the correct container
-     * 
-     * Called when the "More Info" button on a card is clicked
-     * 
-     * @param {String} coinID - ID of desired coin
-     * 
-     * {@link timestampHandler}
-     */
+    // Handles requests for more coin data such as price in USD or Thumbnail then displays the data in the correct container
+    // Called when the "More Info" button on a card is clicked
     async function handleMoreCoinData(coinID) {
         const url = `https://api.coingecko.com/api/v3/coins/${coinID}?market_data=true`;
         let moreData = await timestampHandler(`moreInfo-${coinID}`, url)
@@ -57,9 +43,6 @@ $(() => {
         </div>`;
 
         $(`#collapse-${coinID}`).html(moreInfo);
-
-        resizeText(`#collapseheader-${coinID}`)
-        resizeText(`#collapsesubheader-${coinID}`)
     }
     // On "More Info" click, gets more information with the ID of the coin.
     $("#home--coins-container").on("click", ".badge.coin-card--more-info", async function () {
@@ -67,19 +50,14 @@ $(() => {
         await handleMoreCoinData(coinID);
     })
 
-    /**
-     * Function to display the coins in the coin container on the homepage
-     * 
-     * Called by the `handleHome` function.
-     * 
-     * @param {{}} coinsList - coinsList from API/Local Storage
-     * 
-     * {@link handleHome}
-     */
+    // Function to display the coins in the coin container on the homepage
+    // Called by the `handleHome` function.
     async function displayCoins(coinsList) {
+        coinsList = coinsList.filter(coin => coin.name.length <= 15 && coin.id.length <= 10);
         // Setting range of coins. Bitcoin is around 1114
-        let end = 1214;
-        let start = 1114;
+        let start = 0;
+        let end = 200;
+
         // Variable to hold the HTML content
         let html = ``;
 
@@ -129,18 +107,10 @@ $(() => {
 
         // Displaying the cards
         $("#home--coins-container").html(html);
-
-        // Resizes the text of the coin ID and the coin name in the card, if it's too large for the container
-        for (let i = start; i < end; i++) {
-            let coinID = coinsList[i].id
-            resizeText("#title-" + coinID);
-            resizeText("#subtitle-" + coinID);
-
-        }
-
+        // ! Might be a bug here when you implement the search
         // Shows that favorites are selected (Keeping them toggled after refresh)
         for (let i = start; i < end; i++) {
-            let favListArr = lcl.retrieve("favlist")
+            let favListArr = local.get("favList")
             if (!favListArr) return;
             for (let j = 0; j < favListArr.length; j++) {
                 const storedCoinID = favListArr[j][0]
@@ -152,51 +122,33 @@ $(() => {
         }
     }
 
-    /**
-     * Handler checking if data in local storage has been updated recently. 
-     * 
-     * If more than two minutes have passed, updates the 
-     * 
-     * Tries to retrieve the entry and locate it's timestamp to compare to current time
-     * 
-     * @param {string} Entry Key of entry
-     * @param {string} URL API request url
-     * 
-     * @returns Requested entry
-     */
-    async function timestampHandler(entry, url) {
-        if (lcl.retrieve(entry) === null) {
+    
+    // Timestamp Handler to check if data in local storage has been updated recently.
+    // If more than two minutes have passed, performs a GET request from the url and updates the entry in local storage
+    async function timestampHandler(entryKey, url) {
+        if (local.get(entryKey) === null) {
             const data = await getJSON(url);
             const newTimestamp = Date.now();
-            lcl.store(entry, [data, newTimestamp])
+            local.add(entryKey, [data, newTimestamp])
 
-            return (lcl.retrieve(entry))[0];
+            return (local.get(entryKey))[0];
         }
 
-        const oldTimestamp = (lcl.retrieve(entry))[1];
+        const oldTimestamp = (local.get(entryKey))[1];
         const currentTime = Date.now();
         const timeElapsed = (currentTime - oldTimestamp) / 1000;
 
         if (timeElapsed >= 120) {
             const data = await getJSON(url);
             const newTimestamp = Date.now();
-            lcl.store(entry, [data, newTimestamp])
+            local.add(entryKey, [data, newTimestamp])
 
-            return (lcl.retrieve(entry))[0];
+            return (local.get(entryKey))[0];
 
-        } else return (lcl.retrieve(entry))[0];
+        } else return (local.get(entryKey))[0];
     }
 
-    /**
-     * Function that fetches data from an API or other sources. Counts in the console the amount of calls made, to give an indication if too many calls are being made
-     * 
-     * Called by the `loadCoinList`, `handleMoreCoinData`, `moreDataTimestampHandler` functions
-     *  
-     * @param url - Path to resource
-     * @returns JSON object with requested data
-     * 
-     * {@link loadCoinList}, {@link handleMoreCoinData}, {@link moreDataTimestampHandler}
-     */
+    // AJAX GET Request
     async function getJSON(url) {
         return $.ajax({
             url: url,
@@ -204,45 +156,12 @@ $(() => {
         })
     }
 
-    /**
-     * Function to resize a text element that is too large for it's container or position
-     * 
-     * @param {string} elementSelector ID of the element
-     */
-    function resizeText(elementSelector) {
-        
-        const textElement = $(elementSelector);
-        const containerHeight = textElement.parent().innerHeight();
-        const containerWidth = textElement.parent().innerWidth();
-        const originalFontSize = parseFloat(textElement.css('font-size'));
-        let newFontSize = originalFontSize;
-
-        const rootFontSize = parseFloat(getComputedStyle(document.documentElement).fontSize);
-
-        // Decrease font size until text fits within container height
-        try {
-            while (textElement[0].scrollHeight > containerHeight) {
-                newFontSize -= 1;
-                textElement.css('font-size', `${newFontSize / rootFontSize}rem`);
-            }
-
-            // Decrease font size until text fits within container height
-            while (textElement[0].scrollWidth > containerWidth) {
-                newFontSize -= 1;
-                textElement.css('font-size', `${newFontSize / rootFontSize}rem`);
-            }
-        } catch (err) {
-            console.log(elementSelector, "\n" + err)
-            // TODO Remove from display the coin cards that give errors
-        }
-    }
-
     // Nav Pills Functionality
     // Checking if the selected section is saved, if not, default is homeSection
     $("a.nav-link").removeClass("active");
     $("section").removeClass("d-flex").hide();
 
-    const selectedSection = lcl.retrieve("selectedSection");
+    const selectedSection = local.get("selectedSection");
     if (selectedSection) {
         $(`a.nav-link[data-section="${selectedSection}"]`).addClass("active");
         $("#" + selectedSection).addClass("d-flex").show();
@@ -264,13 +183,20 @@ $(() => {
         $("#" + sectionID).show();
 
         // Keeping selected section on refresh
-        lcl.store("selectedSection", sectionID)
+        local.add("selectedSection", sectionID)
     })
 
     // On click of the nav-tabs, perform action according to the tab
     $("#homeLink").click(async () => await handleHome());
     $("#reportsLink").click(() => { console.log("Reports Clicked") })
     $("#aboutLink").click(() => { console.log("About Clicked") })
+
+    // TODO Search Bar
+    // Search Bar functionality
+    $("form.searchbar-container").on("submit", function(event){
+        event.preventDefault();
+        alert("Click")
+    });
 
     //# On page load
     handleHome()
@@ -286,15 +212,15 @@ $(() => {
 
     function favoritesHandler(coinInfo, that) {
 
-        let favListArr = lcl.retrieve("favlist")
+        let favListArr = local.get("favList")
         if (!favListArr) {
             favListArr = []
-            lcl.store("favlist", favListArr)
+            local.add("favList", favListArr)
         }
 
         // If more than 5 switches are on, the sixth switch should trigger the modal
-        if ($("input:checked").length > 5) {
-            return favoriteModalHandler(favListArr, that);
+        if ($("#home--coins-container input:checked").length > 5) {
+            favoriteModalHandler(favListArr, that);
         }
 
         // When the switch is switched on, push it to the array, otherwise remove it from the array
@@ -306,12 +232,12 @@ $(() => {
         }
 
         // Update the array in storage
-        lcl.store("favlist", favListArr)
+        local.add("favList", favListArr)
     }
-    // TODO Add more stylings and buttons to the list in the modal, add the ability to edit the fav list and store it in storage
+
     function favoriteModalHandler(favListArr, that) {
 
-        // Adding the rows of coins in the favList to the list
+        // For every coin in the favListArr, make a row with the coin name and a checkbox
         let html = ``;
         for (let i = 0; i < favListArr.length; i++) {
             const coin = favListArr[i];
@@ -329,7 +255,7 @@ $(() => {
             `
         }
 
-        // Adding the last selected coin (Because it is not saved to the favlist)
+        // Adding the last selected coin (Because it is not saved to the favList automatically)
         const coinID = $(that).attr("id").substring(7);
         const coinName = $(`#subtitle-${coinID}`).html()
         html += `
@@ -352,38 +278,85 @@ $(() => {
         $("#favoritesModal").modal("toggle");
     }
 
-    // Clicking discard, Modal not saving the changes, unchecking the last selected
+    // Disabled the save changes button if more than 5 checkboxes are selected inside the modal
+    function updateSaveButtonState() {
+        const checkedCheckboxes = $('#favListContainer input[type="checkbox"]:checked')
+        if (checkedCheckboxes.length > 5) $("#modal-save").prop("disabled", true);
+        else $("#modal-save").prop("disabled", false);
+    }
+    $("#favoritesModal").on("change",'#favListContainer input[type="checkbox"]',updateSaveButtonState);
+
+    //# Discard Changes / Exit Buttons
     $("#favoritesModal").on("click", "*.modal-discard", function () {
-        const checkedCheckboxes = $('#home--coins-container input[type="checkbox"]:checked');
-        if (checkedCheckboxes.length > 5) {
-            const checkboxID = checkedCheckboxes[checkedCheckboxes.length - 1].id;
-            $(`#${checkboxID}`).prop("checked", false)
+        const favListArr = local.get("favList")
+        const lastCoinID = favListArr[favListArr.length - 1][0];
+        if (favListArr.length > 5) {
+            $(`#switch-${lastCoinID}`).prop("checked", false)
+            favListArr.pop();
+            local.add("favList", favListArr);
         }
     })
 
-    // Clicking save, Modal saving the changes, and updating favListArr
+    //# Save Changes Button
     $(".modal-footer").on("click", "#modal-save", function () {
-        const favlistArr = lcl.retrieve("favlist")
+        // Checking if there are less than 6 checkboxes checked
+        const checkedCheckboxes = $('#favListContainer input[type="checkbox"]:checked')
+        
+        const favListArr = local.get("favList")
 
-        // Get the values of the unchecked boxes and remove from the favlistArr array
+        // Get the values of the unchecked boxes and remove from the favListArr array
         const uncheckedCheckboxes = $('#favListContainer input[type="checkbox"]:not(:checked)')
         $(uncheckedCheckboxes).each(function () {
            const coinID = $(this).attr("value")
            $(`#switch-${coinID}`).prop("checked", false)
-           favlistArr.forEach(favCoinData => {
+           favListArr.forEach(favCoinData => {
                 if (coinID === favCoinData[0]) {
-                    const index = favlistArr.indexOf(favCoinData)
-                    favlistArr.splice(index, 1)
+                    const index = favListArr.indexOf(favCoinData)
+                    favListArr.splice(index, 1)
                 }
            });
         })
 
+        // Get the values of the checked boxes and ensure they are in the favListArr array
+        $(checkedCheckboxes).each(function () {
+            // Value of each checkbox is the ID of the coin
+            const coinID = $(this).attr("value")
+            $(`#switch-${coinID}`).prop("checked", true)
+            
+            // Checking if the favListArr contains each of the coins
+            const coinName = $(`#subtitle-${coinID}`).html()
+            const isCoinInFavList = favListArr.some(([id, name]) => (id === coinID) && (name === coinName));
+            if (!isCoinInFavList) {
+                favListArr.push([coinID,coinName]);
+            }
+        });
+        
         // Updating the list in storage
-        lcl.store("favlist",favlistArr)       
+        local.add("favList",favListArr)     
+        
+        // Resetting the save button "disabled" property
+        $("#modal-save").prop("disabled", true);
 
         // Hiding modal
         $("#favoritesModal").modal("toggle");
-    }) 
+    })
     
+    //# Scroll to Top button
+    // When the users scroll down 50 px from the top, display the button
+    $(window).scroll(()=> {
+        if ($(document).scrollTop() > 300) {
+            $("#scrollTop-button").css("display", "block");
+        } else {
+            $("#scrollTop-button").css("display", "none");
+        }
+    });
+
+    // When the user clicks on the scrollTop-button, scroll to the top of the document
+    $("#scrollTop-button").click(function() {
+        $("html, body").animate({scrollTop: 0}, 400);
+    });
+
+
+
 });
 
