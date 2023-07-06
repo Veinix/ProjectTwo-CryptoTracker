@@ -30,12 +30,12 @@ body {
 .bg-parallax {
     min-height: 100vh;
     background-image:
-    url(./assets/images/blob.svg),
-    url(./assets/images/blob-1.svg),
-    url(./assets/images/blob-2.svg),
-    url(./assets/images/blob-3.svg),
-    url(./assets/images/blob-5.svg),
-    url(./assets/images/blob.svg);
+    url(../assets/images/blob.svg),
+    url(../assets/images/blob-1.svg),
+    url(../assets/images/blob-2.svg),
+    url(../assets/images/blob-3.svg),
+    url(../assets/images/blob-5.svg),
+    url(../assets/images/blob.svg);
     background-attachment: fixed;
     
     /* x, y */
