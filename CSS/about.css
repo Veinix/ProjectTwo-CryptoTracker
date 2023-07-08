@@ -1,0 +1,42 @@
+#introduction-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+
+    background-color: var(--primary-bg-color);
+
+}
+
+#introduction-container img {
+    height: auto;
+    max-width: 70%;
+}
+#aboutSection h2 {
+    width: 200px;
+    background-color: var(--primary-bg-color);
+    border-radius: 25px;
+}
+
+.about-socials {
+    max-width: 70%;
+}
+
+.links > .btn-group a {
+    border-color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: var(--primary-text-color)
+}
+.links > .btn-group a:hover {
+    background-color: var(--secondary-color);
+    color: var(--secondary-text-color)
+}
+
+.repository a {
+    text-decoration: none;
+    color: var(--primary-text-color)
+}
+.repository a:hover {
+    color: var(--primary-text-color);
+    opacity: 0.7;
+}

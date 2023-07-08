@@ -1,0 +1,17 @@
+/*# Modal */
+/** Discard button */
+div.modal-footer button:first-child {
+    color: var(--secondary-text-color);
+    background-color: var(--primary-accent-color);
+    border-color: var(--primary-accent-color);
+}
+/** Save Button  */
+div.modal-footer button:last-child[disabled] {
+    opacity: 0.5;
+}
+
+div.modal-footer button:last-child {
+    color: var(--primary-text-color);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}

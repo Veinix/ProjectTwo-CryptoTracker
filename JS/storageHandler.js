@@ -1,14 +1,8 @@
 "use strict";
 
-/** 
- * @module simpleLocal
- * @description Module to more easily manipulate local storage with easier, more robust and user-friendly syntax
-*/
-
 /**
  * More easily manipulate and read local storage data
  * @example local.add("key", value);
- * @namespace local
  * @method add -- Adds an entry by it's key and value to `localStorage`.
  * @method get -- Returns an entry from `localStorage` based on its key
  * @method remove -- Removes an entry from `localStorage` based on its key

@@ -1,0 +1,27 @@
+/*# Navbar */
+/* Nav pill colors */
+.nav-pills > .nav-item a {
+    color: var(--accent-text-color);
+}
+.nav-pills > .nav-item a:hover {
+    color: var(--primary-text-color);
+}
+.nav-item > a.nav-link.active{
+    background-color: var(--primary-color);
+    color: var(--primary-text-color)
+}
+
+/* Hiding the sections by default */
+#homeSection, #reportsSection, #aboutSection {
+    display: none;
+}
+
+#nav--main-container {
+    background-color: var(--primary-bg-color);
+}
+
+/* Since we removed the href attribute from the anchor tags, we need to add the aesethic on hover */
+.nav-link {
+    cursor: pointer;
+}
+

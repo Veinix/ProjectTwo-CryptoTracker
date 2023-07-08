@@ -1,0 +1,126 @@
+/*# Coin Cards */
+.coin-card {
+    height: 19.25rem;
+    width: 13rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.coin-card--header {
+    display: flex;
+}
+.coin-card--coin-rank {
+    width: 60%;
+    height: 1.5rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    order: 1;
+    
+    background-color: var(--secondary-color);
+    color: var(--primary-text-color);
+}
+.coin-card--img{
+    width: 5rem;
+    height: 5rem;
+    border-radius: 50%;
+    display: block;
+    margin: 1rem auto;
+}
+.coin-card--favtoggle-div {
+    order: 2;
+    margin-left: auto;
+}
+.coin-card--favtoggle {
+    transform: scale(1.5);
+}
+.coin-card--favtoggle:hover {
+    cursor: pointer;
+}
+.coin-card--favtoggle:checked,
+.coin-card--favtoggle:focus {
+    background-color: var(--primary-color);
+    border: var(--primary-color);
+}
+.coin-card--more-info {
+    width: 8rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+    background-color: var(--primary-color);
+    color: var(--primary-text-color);
+    border: none;
+    font-size: small;
+}
+.coin-card--more-info:hover, .coin-card--more-info:active     {
+    transition: opacity 100ms;
+    opacity: 0.5;
+    cursor: pointer;
+}
+.coin-card--collapse {
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+}
+.coin-card--long-pill {
+    height: 1.5rem;
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    align-self: center;
+    align-items: center;
+    background-color: var(--primary-accent-color);
+}
+.coin-card--collapse .loading-container {
+    box-shadow: none;
+    height: 16rem;
+}
+.coin-card--title-container {
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 10rem;
+    height: 6rem;
+    border-radius: 25px;
+    background-color: var(--secondary-accent-color);
+    color: white;
+}
+.coin-card--subtitle-container {
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: fit-content;
+    height: 5rem;
+}
+.coin-card--title-container > h3,
+.coin-card--subtitle-container > h4 {
+    margin: 0;
+}
+.collapse-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+.collapse-content--header {
+    width: 12.75rem;
+    height: 1.5rem;
+}
+
+/* When searching doesn't provide a result */
+.missing-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-flow: column;
+    height: 20rem;
+    width: 13rem;
+    border-radius: 25px;
+    background-color: var(--secondary-accent-color);
+    color: white;
+}
