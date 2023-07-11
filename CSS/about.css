@@ -1,4 +1,4 @@
-#introduction-container {
+#about--introduction-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -8,10 +8,16 @@
 
 }
 
-#introduction-container img {
+#about--main-row {
+    width: 100%;
+}
+
+#about--introduction-container img {
     height: auto;
+    max-height: 50%;
     max-width: 70%;
 }
+
 #aboutSection h2 {
     width: 200px;
     background-color: var(--primary-bg-color);

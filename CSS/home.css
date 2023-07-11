@@ -1,0 +1,157 @@
+/*# Main */
+/* CSS Variables */
+:root {
+    --primary-bg-color: #ffffff;
+    --secondary-bg-color: #FAF9F6;
+    --primary-text-color: #000000;
+    --accent-text-color:  #00000099;
+    --secondary-text-color: #ffffff;
+  
+    --primary-color: #A2FF86;
+    --primary-accent-color: #164B60;
+    --secondary-color: #1B6B93;
+    --secondary-accent-color: #4FC0D0;
+}
+
+* {
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh ;
+}
+
+/* Parallax background on body */
+.bg-parallax {
+    min-height: 100vh;
+    background-image:
+    url(../assets/images/blob.svg),
+    url(../assets/images/blob-1.svg),
+    url(../assets/images/blob-2.svg),
+    url(../assets/images/blob-3.svg),
+    url(../assets/images/blob-5.svg),
+    url(../assets/images/blob.svg);
+    background-attachment: fixed;
+    
+    /* x, y */
+    background-position: 
+    2% 10%,
+    5% 70%,
+    39% 20%,
+    50% 70%,
+    90% 30%,
+    90% 90%;
+
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: 18rem;
+}
+
+/* Class that makes the element have a white background with a gray shadow at it's bottom*/
+.box-shadow-bottom { 
+    background-color: white;
+    box-shadow: 0 8px 6px -6px gray;
+    border-radius: 15px;
+}
+
+/* Loading Message */
+.loading-container {
+    width: 10rem;
+    height: 100px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding-top: 10px;
+    box-shadow: 0px 0px 8px 2px gray;
+    border-radius: 10px;
+    background-color: var(--secondary-bg-color);
+}
+.loading-spinner {  
+    width: 60px;  
+    height: 60px;
+    border: 8px solid rgba(189,189,189 ,0.25);
+    border-top-color: var(--primary-accent-color);
+    border-right-color: var(--secondary-accent-color);
+    border-bottom-color: var(--primary-color);
+    border-left-color: var(--secondary-color);
+    border-radius: 50%;
+    animation: rotate 700ms infinite linear;
+}
+
+@keyframes rotate {
+    to { transform: rotate(1turn);}
+}
+
+section {
+    max-width: 1650px;
+}
+
+/* Back to Top button */
+#scrollTop-button {
+    display: none;
+    position: fixed;
+    bottom: 20px; 
+    right: 30px; 
+    z-index: 99; 
+    color: var(--accent-text-color);
+    border-color: var(--accent-text-color);
+    background-color: var(--primary-bg-color); 
+    cursor: pointer; 
+    padding: 10px; 
+    border-radius: 10px; 
+}
+#scrollTop-button:hover {
+    color: var(--primary-text-color); 
+    border-color: var(--primary-color);
+    background-color: var(--primary-color); 
+}
+
+/* Search Bar */
+.search-button {
+    color: var(--accent-text-color);
+    border-color: var(--accent-text-color);
+}
+.search-button:hover,
+.search-button:active {
+    color: var(--primary-text-color);
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.reset-button {
+    color: var(--accent-text-color);
+    border-color: var(--accent-text-color);
+}
+
+.reset-button:hover,
+.reset-button:active {
+    color: var(--secondary-text-color);
+    background-color: var(--primary-accent-color);
+    border-color: var(--primary-accent-color);
+}
+
+/*# Footer */
+/* Shape Divider */
+.wave-divider {
+    margin-top: auto;
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+
+.wave-divider svg {
+    position: relative;
+    display: block;
+    width: calc(140% + 1.3px);
+    height: 235px;
+}
+
+.wave-divider .shape-fill {
+    fill:  url(#wave-divider--linear-gradient);
+}

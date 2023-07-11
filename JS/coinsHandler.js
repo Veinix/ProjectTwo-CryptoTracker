@@ -1,35 +1,38 @@
 /// <reference path="./libraries/jquery-3.7.0.js"/>
 "use strict";
-
 const coinsHandler = (()=>{
         // Handles requests for more coin data such as price in USD or Thumbnail then displays the data in the correct container
         // Called when the "More Info" button on a card is clicked
         async function moreInfo(coinID) {
-        const url = `https://api.coingecko.com/api/v3/coins/${coinID}?market_data=true`;
-        const moreData = await timeStamp.get(`moreInfo-${coinID}`, url)
-        
-        // Paths to the prices and image
-        const priceUSD = moreData.market_data?.current_price.usd ?? "N/A";
-        const priceEUR = moreData.market_data?.current_price.eur ?? "N/A";
-        const priceILS = moreData.market_data?.current_price.ils ?? "N/A";
-        const coinImgSrc = moreData.image.large;
-        
-        let coinSymbol = moreData.symbol;
-        let coinName = moreData.name;
-        
-        const moreInfo = `
-        <div class="card card-body p-0 pt-1 collapse-content">
-        <div class="collapse-content--header">
-                <span class="fw-bold mb-0" id="collapseheader-${coinID}">${coinName} <span class="order-2 fw-bold text-black-50" id="collapsesubheader-${coinID}">${coinSymbol}</span></span>
-                </div>
-            <img src="${coinImgSrc}" class="coin-card--img">
-            <span class="badge rounded-pill mb-2 coin-card--long-pill"> Current Price </span>
-            <span class="mb-1">${priceUSD.toLocaleString("en-us", { style: "currency", currency: "USD", maximumFractionDigits: 20 })}</span>
-            <span class="mb-1">${priceEUR.toLocaleString("en-us", { style: "currency", currency: "EUR", maximumFractionDigits: 20 })}</span>
-            <span class="pb-1">${priceILS.toLocaleString("en-us", { style: "currency", currency: "ILS", maximumFractionDigits: 20 })}</span>
-        </div>`;
-        
-        $(`#collapse-${coinID}`).html(moreInfo);
+            if (coinID.indexOf("_SPACE_") >= 0) {
+                coinID = coinID.replace(/_SPACE_/g, " ");
+            }
+            console.log(coinID)
+            const url = `https://api.coingecko.com/api/v3/coins/${coinID}?market_data=true`;
+            console.log(url)
+            const moreData = await timeStamp.get(`moreInfo-${coinID}`, url)
+            // Paths to the prices and image
+            const priceUSD = moreData.market_data.current_price.usd;
+            const priceEUR = moreData.market_data.current_price.eur;
+            const priceILS = moreData.market_data.current_price.ils;
+            const coinImgSrc = moreData.image.large;
+            
+            let coinSymbol = moreData.symbol;
+            let coinName = moreData.name;
+            
+            const moreInfo = `
+            <div class="card card-body p-0 pt-1 collapse-content">
+            <div class="collapse-content--header">
+                    <span class="fw-bold mb-0" id="collapseheader-${coinID}">${coinName} <span class="order-2 fw-bold text-black-50" id="collapsesubheader-${coinID}">${coinSymbol}</span></span>
+                    </div>
+                <img src="${coinImgSrc}" class="coin-card--img">
+                <span class="badge rounded-pill mb-2 coin-card--long-pill"> Current Price </span>
+                <span class="mb-1">${priceUSD.toLocaleString("en-us", { style: "currency", currency: "USD", maximumFractionDigits: 20 })}</span>
+                <span class="mb-1">${priceEUR.toLocaleString("en-us", { style: "currency", currency: "EUR", maximumFractionDigits: 20 })}</span>
+                <span class="pb-1">${priceILS.toLocaleString("en-us", { style: "currency", currency: "ILS", maximumFractionDigits: 20 })}</span>
+            </div>`;
+            
+            $(`#collapse-${coinID}`).html(moreInfo);
         }
     
         // Function to display the coins in the coin container on the homepage
@@ -45,6 +48,12 @@ const coinsHandler = (()=>{
             for (let i = start; i < end; i++) {
                 
                 let coinID = coinsList[i].id
+
+                // Some coingecko coin IDs contain spaces. When displaying them, add a special string that will be removed when sending it to the API.
+                if (coinID.indexOf(" ") >= 0) {
+                    coinID = coinID.replace(/ /g, "_SPACE_");
+                }
+
                 let coinName = coinsList[i].name
                 let coinSymbol = coinsList[i].symbol
                 
@@ -95,6 +104,9 @@ const coinsHandler = (()=>{
                 for (let j = 0; j < favListArr.length; j++) {
                     const storedCoinID = favListArr[j][0]
                     let coinID = coinsList[i].id
+                    if (coinID.indexOf(" ") >= 0) {
+                        coinID = coinID.replace(/ /g, "_SPACE_");
+                    }
                     if (storedCoinID === coinID) {
                         $(`#switch-${coinID}`).prop("checked", !($(`#switch-${coinID}`).prop("checked")));
                     }

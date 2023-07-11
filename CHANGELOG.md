@@ -18,10 +18,10 @@ All notable changes to this project will be documented in this file
 
 ### Remarks
 
-1. Use the jQuery library (Do I really need to though?)
-2. API calls to be made my jQuery AJAX and not XMLHTTPReq. (Didn't Assaf say we can just use the method we were taught?)
-3. Adaptive design for mobile - Bootstrap
-4. Bonus: Real time reports
+1. Use the jQuery library
+2. API calls to be made by jQuery AJAX and not XMLHTTPReq. (The lecturer mentioned we can use fetch if we prefer)
+3. Use Bootstrap for adaptive design
+4. Bonus: Real time reports page
 
 ---
 

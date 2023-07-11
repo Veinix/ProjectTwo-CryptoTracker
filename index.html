@@ -4,26 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <!-- CSS -->
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <link rel="stylesheet" href="./CSS/main.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="./CSS/home.css">
     <link rel="stylesheet" href="./CSS/modal.css">
     <link rel="stylesheet" href="./CSS/coin-cards.css">
-    <link rel="stylesheet" href="./CSS/graph.css">
+    <link rel="stylesheet" href="./CSS/reports.css">
     <link rel="stylesheet" href="./CSS/about.css">
     <link rel="stylesheet" href="./CSS/navbar.css">
-    <!-- Libraries -->
+
+    <!-- JS -->
+    <!-- jQuery -->
     <script src="./JS/Libraries/jquery-3.7.0.js"></script>
+    <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
-    <!-- JS -->
+    <!-- D3 -->
+    <script src="./JS/libraries/d3.v7.js"></script>
+    <!-- Custom JS -->
     <script src="./JS/storageHandler.js"></script>
     <script src="./JS/searchHandler.js"></script>
     <script src="./JS/favoritesHandler.js"></script>
-    <script src="./JS/timestampHandler.js"></script>
+    <script src="./JS/ajaxHandler.js"></script>
     <script src="./JS/coinsHandler.js"></script>
+    <script src="./JS/graph.js"></script>
     <script src="./JS/main.js"></script>
 
     <link rel="shortcut icon" href="/assets/favicon/favicon.ico?=CryptoProject" type="image/x-icon">
@@ -33,7 +42,7 @@
 
 <body class="d-flex flex-column pt-5 bg-parallax">
     <!-- Navbar -->
-    <nav class="navbar fixed-top navbar-expand-lg box-shadow-bottom" id="nav--main-container">
+<nav class="navbar fixed-top navbar-expand-lg box-shadow-bottom" id="nav--main-container">
         <div class="container-fluid">
             <a class="navbar-brand"> Coin Heart </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -96,11 +105,12 @@
         <!-- Home/Main section with the coins display -->
         <section id="homeSection" class="container flex-column text-center align-items-center row-gap-2">
             <div class="row my-3 py-3 box-shadow-bottom" id="home--welcome-row">
-                <div class="col justify-content-center text-center">
+                <div class="col d-flex flex-column justify-content-center align-items-center text-center">
                     <h1> Coin Heart ❤️</h1>
                     <h2> The place to see coins to your hearts content</h2>
                     <p> Below you will be able to see all the different crypto currencies, search for coins, and even
                         favorite up to five different coins to track them!</p>
+                    <p class="w-75"> To search for a coin, select what you want to search by (CoinGecko ID, Name or Symbol), then click Search. If you want to show all coins without any filter, simply click search. Reset will show all the default coins. </p>
 
                     <!-- Searchbar -->
                     <form class="container-fluid d-flex searchbar-container" role="search">
@@ -110,16 +120,16 @@
                             </div>
                             <div class="col-lg-2 col-md-6">
                                 <select class="form-select text-center" id="home--searchbar-options">
-                                    <option default value="id">Coin ID</option>
                                     <option value="name">Coin Name</option>
                                     <option value="symbol">Coin Symbol</option>
+                                    <option default value="id">Coin ID</option>
                                 </select>
                             </div>
                             <div class="col-lg-2 col-md-3 col-sm-6">
-                                <button class="btn container-fluid" type="submit">Search</button>
+                                <button class="btn container-fluid search-button" type="submit">Search</button>
                             </div>
                             <div class="col-lg-1 col-md-3 col-sm-6">
-                                <button class="btn container-fluid" type="reset">Reset</button>
+                                <button class="btn container-fluid reset-button" type="reset">Reset</button>
                             </div>
                         </div>
                     </form>
@@ -130,7 +140,7 @@
 
             <!-- Coins get displayed inside the child of this container -->
             <div class="container">
-                <div class="row row-cols-auto row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 g-4 justify-content-center"
+                <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 row-cols-xxl-6 g-4 justify-content-center"
                     id="home--coins-container">
 
                     <!-- While there are no coins, a loading card is displayed. Gets removed when the content loads because the JS changes the html of the container -->
@@ -145,65 +155,82 @@
 
         </section>
 
+        <!-- TODO Make the graph work -->
         <!-- Reports, containing the graph and other data about the favorited coins -->
         <section id="reportsSection" class="container flex-column align-items-center row-gap-2">
-            <div class="row my-3 py-3" id="reports--main-row">
+            <div class="row my-3 py-3 box-shadow-bottom" id="reports--main-row">
                 <div class="col justify-content-center text-center">
 
-                    <h2> Reports </h2>
-                    <div class="loading-container">
-                        <div class="loading-spinner"></div>
-                        <span class="pt-2"> Loading...</span>
-                    </div>
-
+                    <h2> Real-Time Reports </h2>
+                    <h3> Below you can see your favorite coins, and how they are performing! </h3>
                 </div>
             </div>
+            <div class="row">
+                <div class="container-fluid d-flex justify-content-center">
+                    <div id="graphContainer" class="p-4 box-shadow-bottom"></div>
+                </div>
+                <div class="col">
+                    <div id="graph-legend"> </div>
+                </div>
+            </div>
+                
+
         </section>
 
         <!-- About page, information about myself -->
-        <section id="aboutSection" class="container d-flex flex-column align-items-center row-gap-2">
+        <section id="aboutSection" class="container flex-column align-items-center row-gap-2">
             <div class="row mt-3 pt-3" id="about--main-row">
-                <div class="col d-flex flex-column justify-content-center align-items-center text-center">
+                <div
+                    class="col d-flex flex-column justify-content-center align-items-center text-center box-shadow-bottom">
                     <h2> About </h2>
                 </div>
             </div>
-            <div id="introduction-container" class="p-2 m-2 box-shadow-bottom">
+            <div id="about--introduction-container" class="p-2 m-2 box-shadow-bottom">
                 <h3 class="mt-1">David Aviles</h3>
-                <h4 class="mt-2"> I'm the guy that made this project. A crypto-currency app to search for, and track different coins</h4>
-                <img src="https://placehold.co/1920x1080.png" alt="Picture of David">
+                <h4 class="mt-2"> I'm the guy that made this project. A crypto-currency app to search for, and track
+                    different coins</h4>
+                <img src="assets\images\developerImage.png" alt="Picture of David">
                 <p> I'm a student at John Bryce - studying web development. This is some of the fruits of my labor</p>
             </div>
 
             <div class="p-2 m-2 box-shadow-bottom">
                 <h3> How do I use this app? </h3>
-                <span> It's almost self explanatory, but here we go. To track different coins you can click on the button on each card. You can have a maximum of five coins selected. If you select more, a modal window will prompt you to re-think your choices. </span>
+                <span> It's almost self explanatory, but here we go. To track different coins you can click on the
+                    button on each card. You can have a maximum of five coins selected. If you select more, a modal
+                    window will prompt you to re-think your choices. </span>
                 <span> You can also go to the Live Reports tab to track the coins you selected! </span>
             </div>
             <div class="p-2 m-2 box-shadow-bottom">
                 <h3> So how did I make this?</h3>
                 <span> You can look at my github for more detailed information (Linked below).</span>
-                <span> Basically, I worked really hard - studied a lot - and tried to teach myself different ways of doing the same thing. 
-                    For example - If I found a way to store something in local storage, I would try to find another way so that I could expand my skill set.
+                <span> Basically, I worked really hard - studied a lot - and tried to teach myself different ways of
+                    doing the same thing.
+                    For example - If I found a way to store something in local storage, I would try to find another way
+                    so that I could expand my skill set.
                 </span>
             </div>
             <div class="d-flex justify-content-center gap-5">
-                <div class="box-shadow-bottom d-flex flex-column justify-content-center align-items-center about-socials p-3">
+                <div
+                    class="box-shadow-bottom d-flex flex-column justify-content-center align-items-center about-socials p-3">
                     <h3> Socials </h3>
                     <span class="pb-2"> Below, you can find my socials! </span>
-                    <div class="links mb-2">    
+                    <div class="links mb-2">
                         <div class="btn-group" role="group">
                             <a href="https://github.com/Veinix" target="_blank" class="btn btn-primary">Github</a>
-                            <a href="https://www.linkedin.com/in/david-aviles-78541b164" target="_blank" class="btn btn-primary">LinkedIn</a>
+                            <a href="https://www.linkedin.com/in/david-aviles-78541b164" target="_blank"
+                                class="btn btn-primary">LinkedIn</a>
                         </div>
                     </div>
                 </div>
                 <div class="p-4 box-shadow-bottom d-flex justify-content-center align-items-center repository">
-                    <a href="https://github.com/Veinix/ProjectTwo-CryptoTracker" target="_blank"><h3> Repository Link </h3></a>
+                    <a href="https://github.com/Veinix/ProjectTwo-CryptoTracker" target="_blank">
+                        <h3> Repository Link </h3>
+                    </a>
                 </div>
             </div>
 
-            
-                
+
+
         </section>
     </main>
 
