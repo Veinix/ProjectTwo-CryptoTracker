@@ -18,35 +18,28 @@ const local = (() => {
          * @example local.add("dataKey",dataValue);
          * @param {string} key - The key of the entry
          * @param {any} value - The value of the entry
-         * @param {boolean} [doesReturn] Optional. Set to true to return the stored information
          * @return {any} If `doesReturn` is set to true, returns the stored value
         */
-        function add(key, value, doesReturn){
+        function add(key, value){
             // Validate the key parameter
             if (typeof key !== "string" || key.trim() === "") {
                 throw new Error("Invalid key. Key must be a non-empty string.");
             }
-
-            // Convert key to string and stringifying value
-            key = key.toString();
+            
+            // Stringifying value
             const data = JSON.stringify(value);
 
             // Try-Catch block to catch errors such as "QuotaExceededError" (Local Storage limit reached)
             try {
                 localStorage.setItem(key, data);
-            } catch (error) {
-                if (error instanceof DOMException && error.name === "QuotaExceededError") {
+            } catch (err) {
+                if (err instanceof DOMException && err.name === "QuotaExceededError") {
                 console.error(
                     "Storage quota exceeded. Cannot add more data to localStorage. \n Recommendations: \n 1) Use lcl.remove(key) to remove data that is not needed anymore \n 2) Periodically delete information that is not needed \n 3) Use other methods of storage (sessionStorage, cookies, cache, IndexedDB");
                 } else {
                 // Handle other errors
-                console.error("An error occurred while accessing localStorage:", error);
+                console.error("An error occurred while accessing localStorage:", err);
                 }
-            }
-            
-            if (doesReturn) {  
-                const entry = localStorage.getItem(key);
-                return entry ? JSON.parse(entry) : null;
             }
         }
 
@@ -67,6 +60,7 @@ const local = (() => {
             // Convert key to string
             key = key.toString();
             const entry = localStorage.getItem(key);
+            // TODO Check if ternary is needed
             return entry ? JSON.parse(entry) : null;
         }
 

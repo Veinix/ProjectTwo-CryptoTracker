@@ -1,5 +1,6 @@
 #graphContainer {
-    width: 800px;
-    height: 600px;
+    width: 900;
+    min-width: 900px;
+    height: 650px;
     overflow: scroll;
 }

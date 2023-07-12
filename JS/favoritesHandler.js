@@ -15,19 +15,19 @@ $(()=> {
     function favoritesHandler(coinInfo, that) {
         // If there is no favList, make one
         let favListArr = local.get("favList")
-        if (!favListArr) {
-            favListArr = []
-            local.add("favList", favListArr)
-        }
+        if (!favListArr) favListArr = []
         
         // When the switch is switched on, push it to the array, otherwise remove it from the array
         if (that.is(":checked")) {
             favListArr.push(coinInfo);
         } else {
-            const index = favListArr.indexOf(coinInfo)
-            favListArr.splice(index, 1)
+            // Looping through the elements in each array, since indexOf doesn't work on complex arrays
+            for (let i = 0; i < favListArr.length; i++) {
+                const coinInfoArr = favListArr[i];
+                if (coinInfoArr[0] === coinInfo[0]) favListArr.splice(i, 1);
+            }
         }
-        
+
         // Update the array in storage
         local.add("favList", favListArr)
 
@@ -40,7 +40,7 @@ $(()=> {
     // Event listener for the switch on the coin-cards
     $("#home--coins-container").on("change", ".form-check-input.coin-card--favtoggle", 
         async function () {
-            const coinID = $(this).attr("id").substring(7);
+            const coinID = $(this).attr("id").substring(7)
             const coinName = $(`#subtitle-${coinID}`).html()
             const coinInfo = [coinID, coinName];
 
@@ -52,7 +52,6 @@ $(()=> {
 
     //# Favorites Modal
     function modalHandler(favListArr) {
-
         // For every coin in the favListArr, make a row with the coin name and a checkbox
         let html = ``;
         for (let i = 0; i < favListArr.length; i++) {

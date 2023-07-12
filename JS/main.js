@@ -54,7 +54,7 @@ $(() => {
     }
 
     function handleReports() {
-        graph.render()
+        
     }
 
     function handleAbout() {

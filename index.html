@@ -24,8 +24,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
-    <!-- D3 -->
-    <script src="./JS/libraries/d3.v7.js"></script>
+    <!-- CanvasJS -->
+    <script type="text/javascript" src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script> 
+    <script src="https://cdn.canvasjs.com/ga/canvasjs.stock.min.js"></script>
     <!-- Custom JS -->
     <script src="./JS/storageHandler.js"></script>
     <script src="./JS/searchHandler.js"></script>
@@ -167,7 +168,10 @@
             </div>
             <div class="row">
                 <div class="container-fluid d-flex justify-content-center">
-                    <div id="graphContainer" class="p-4 box-shadow-bottom"></div>
+                    <div id="graphContainer" class="box-shadow-bottom">
+                        <!-- Graph goes here -->
+
+                    </div>
                 </div>
                 <div class="col">
                     <div id="graph-legend"> </div>

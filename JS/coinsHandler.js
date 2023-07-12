@@ -1,5 +1,7 @@
 /// <reference path="./libraries/jquery-3.7.0.js"/>
 "use strict";
+
+
 const coinsHandler = (()=>{
         // Handles requests for more coin data such as price in USD or Thumbnail then displays the data in the correct container
         // Called when the "More Info" button on a card is clicked
