@@ -5,14 +5,13 @@
 const coinsHandler = (()=>{
         // Handles requests for more coin data such as price in USD or Thumbnail then displays the data in the correct container
         // Called when the "More Info" button on a card is clicked
+        // TODO Filter all coins that have a space in their symbol or Coingecko ID
         async function moreInfo(coinID) {
             if (coinID.indexOf("_SPACE_") >= 0) {
                 coinID = coinID.replace(/_SPACE_/g, " ");
             }
-            console.log(coinID)
             const url = `https://api.coingecko.com/api/v3/coins/${coinID}?market_data=true`;
-            console.log(url)
-            const moreData = await timeStamp.get(`moreInfo-${coinID}`, url)
+            const moreData = await ajaxHandler.timeStamp(`moreInfo-${coinID}`, url)
             // Paths to the prices and image
             const priceUSD = moreData.market_data.current_price.usd;
             const priceEUR = moreData.market_data.current_price.eur;

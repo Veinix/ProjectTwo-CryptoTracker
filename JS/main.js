@@ -48,8 +48,8 @@ $(() => {
     // Called on page load
     async function handleHome() {
         const url = "https://api.coingecko.com/api/v3/coins/list";
-        const coinsList = await timeStamp.get("coinsList", url);
-        const filteredCoins = coinsList.filter(coin => coin.name.length <= 15 && coin.id.length < 12)
+        const coinsList = await ajaxHandler.timeStamp("coinsList", url);
+        const filteredCoins = coinsList.filter(coin => coin.name.length <= 15 && coin.id.length < 12 )
         coinsHandler.display(filteredCoins)
     }
 

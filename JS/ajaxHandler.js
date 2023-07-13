@@ -1,16 +1,15 @@
 /// <reference path="./libraries/jquery-3.7.0.js"/>
 "use strict";
 
-const timeStamp = (()=>{
+const ajaxHandler = (()=>{
 
+    // TODO changes the ajax options to include the error property that will call the handleErrors function
     // AJAX GET Request
     async function getJSON(url) {
         try {
             const response = await $.ajax({
                 url: url,
-                dataType: "json",
             })
-
             return response
         } catch (error) {
             return await handleErrors(error, url);
@@ -39,11 +38,11 @@ const timeStamp = (()=>{
 
     async function wait(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
-      }
+    }
 
     // Timestamp Handler to check if data in local storage has been updated recently.
     // If more than two minutes have passed, performs a GET request from the url and updates the entry in local storage
-    async function get(entryKey, url) {
+    async function timeStamp(entryKey, url) {
         if (local.get(entryKey) === null || local.get(entryKey)[0] === null) {
             const data = await getJSON(url);
             const newTimestamp = Date.now();
@@ -67,7 +66,8 @@ const timeStamp = (()=>{
     }
 
     return {
-        get: get
+        timeStamp: timeStamp,
+        getJSON: getJSON
     }
     
 })();

@@ -42,7 +42,8 @@ $(()=> {
         async function () {
             const coinID = $(this).attr("id").substring(7)
             const coinName = $(`#subtitle-${coinID}`).html()
-            const coinInfo = [coinID, coinName];
+            const coinSymbol = $(`#title-${coinID}`).html()
+            const coinInfo = [coinID, coinName, coinSymbol];
 
             // Bringing this to the next function via that
             const that = $(this)

@@ -33,7 +33,7 @@
     <script src="./JS/favoritesHandler.js"></script>
     <script src="./JS/ajaxHandler.js"></script>
     <script src="./JS/coinsHandler.js"></script>
-    <script src="./JS/graph.js"></script>
+    <script src="./JS/chartHandler.js"></script>
     <script src="./JS/main.js"></script>
 
     <link rel="shortcut icon" href="/assets/favicon/favicon.ico?=CryptoProject" type="image/x-icon">
@@ -158,7 +158,7 @@
 
         <!-- TODO Make the graph work -->
         <!-- Reports, containing the graph and other data about the favorited coins -->
-        <section id="reportsSection" class="container flex-column align-items-center row-gap-2">
+        <section id="reportsSection" class="container flex-column align-items-center">
             <div class="row my-3 py-3 box-shadow-bottom" id="reports--main-row">
                 <div class="col justify-content-center text-center">
 
@@ -167,14 +167,11 @@
                 </div>
             </div>
             <div class="row">
-                <div class="container-fluid d-flex justify-content-center">
-                    <div id="graphContainer" class="box-shadow-bottom">
+                <div class="col-md-6">
+                    <div id="chartContainer" class="box-shadow-bottom">
                         <!-- Graph goes here -->
 
                     </div>
-                </div>
-                <div class="col">
-                    <div id="graph-legend"> </div>
                 </div>
             </div>
                 
@@ -228,7 +225,7 @@
                 </div>
                 <div class="p-4 box-shadow-bottom d-flex justify-content-center align-items-center repository">
                     <a href="https://github.com/Veinix/ProjectTwo-CryptoTracker" target="_blank">
-                        <h3> Repository Link </h3>
+                        <h3 class="text-center"> Repository Link </h3>
                     </a>
                 </div>
             </div>
