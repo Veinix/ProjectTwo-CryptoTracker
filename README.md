@@ -40,7 +40,7 @@ Contributions are welcome! If you'd like to contribute to Crypto Tracker, please
 
 ## Known Bugs
 
-- Too many calls being made causes the API to temporarily block the IP
+- Too many calls being made causes the API to temporarily block access
 
 ## License
 

@@ -6,7 +6,6 @@ $(() => {
     handleHome()
 
     //# Nav Pills Functionality
-    // TODO Combine some of these event listeners
     // On nav pill click, perform action according to the tab
     $("#homeLink").click(async () => await handleHome());
     $("#reportsLink").click(() => handleReports())
@@ -52,13 +51,8 @@ $(() => {
         coinsHandler.display(filteredCoins)
     }
 
-    function handleReports() {
-        
-    }
-
-
     //# Scroll to Top button
-    // When the users scroll down 50 px from the top, display the button
+    // When the users scroll down from the top, display the "back to top" button
     $(window).scroll(()=> {
         if ($(document).scrollTop() > 300) {
             $("#scrollTop-button").css("display", "block");
