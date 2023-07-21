@@ -5,21 +5,18 @@
 const coinsHandler = (()=>{
         // Handles requests for more coin data such as price in USD or Thumbnail then displays the data in the correct container
         // Called when the "More Info" button on a card is clicked
-        // TODO Filter all coins that have a space in their symbol or Coingecko ID
         async function moreInfo(coinID) {
-            if (coinID.indexOf("_SPACE_") >= 0) {
-                coinID = coinID.replace(/_SPACE_/g, " ");
-            }
             const url = `https://api.coingecko.com/api/v3/coins/${coinID}?market_data=true`;
             const moreData = await ajaxHandler.timeStamp(`moreInfo-${coinID}`, url)
+            
             // Paths to the prices and image
             const priceUSD = moreData.market_data.current_price.usd;
             const priceEUR = moreData.market_data.current_price.eur;
             const priceILS = moreData.market_data.current_price.ils;
+
             const coinImgSrc = moreData.image.large;
-            
-            let coinSymbol = moreData.symbol;
-            let coinName = moreData.name;
+            const coinSymbol = moreData.symbol;
+            const coinName = moreData.name;
             
             const moreInfo = `
             <div class="card card-body p-0 pt-1 collapse-content">
@@ -28,9 +25,9 @@ const coinsHandler = (()=>{
                     </div>
                 <img src="${coinImgSrc}" class="coin-card--img">
                 <span class="badge rounded-pill mb-2 coin-card--long-pill"> Current Price </span>
-                <span class="mb-1">${priceUSD.toLocaleString("en-us", { style: "currency", currency: "USD", maximumFractionDigits: 20 })}</span>
-                <span class="mb-1">${priceEUR.toLocaleString("en-us", { style: "currency", currency: "EUR", maximumFractionDigits: 20 })}</span>
-                <span class="pb-1">${priceILS.toLocaleString("en-us", { style: "currency", currency: "ILS", maximumFractionDigits: 20 })}</span>
+                <span class="mb-1">${priceUSD.toLocaleString("en-us", {style: "currency", currency: "USD", maximumFractionDigits: 20 })}</span>
+                <span class="mb-1">${priceEUR.toLocaleString("en-us", {style: "currency", currency: "EUR", maximumFractionDigits: 20 })}</span>
+                <span class="pb-1">${priceILS.toLocaleString("en-us", {style: "currency", currency: "ILS", maximumFractionDigits: 20 })}</span>
             </div>`;
             
             $(`#collapse-${coinID}`).html(moreInfo);
@@ -39,7 +36,7 @@ const coinsHandler = (()=>{
         // Function to display the coins in the coin container on the homepage
         // Called by the `handleHome` function.
         async function display(coinsList) {
-            // Setting range of coins. Bitcoin is around 1114
+            // Setting range of coins
             let start = 0;
             let end = coinsList.length > 200 ? 200 : coinsList.length;
             
@@ -49,12 +46,6 @@ const coinsHandler = (()=>{
             for (let i = start; i < end; i++) {
                 
                 let coinID = coinsList[i].id
-
-                // Some coingecko coin IDs contain spaces. When displaying them, add a special string that will be removed when sending it to the API.
-                if (coinID.indexOf(" ") >= 0) {
-                    coinID = coinID.replace(/ /g, "_SPACE_");
-                }
-
                 let coinName = coinsList[i].name
                 let coinSymbol = coinsList[i].symbol
                 
@@ -77,10 +68,10 @@ const coinsHandler = (()=>{
                             </div>
                             <div class="mt-3 d-flex flex-column">
                             <div class="mb-2 coin-card--title-container">
-                            <h3 id="title-${coinID}">${coinSymbol}</h3>
+                            <h3 id="symbol-${coinID}">${coinSymbol}</h3>
                             </div>
                             <div class="coin-card--subtitle-container">
-                            <h4 id="subtitle-${coinID}">${coinName}</h4>
+                            <h4 id="name-${coinID}">${coinName}</h4>
                             </div>
                             </div>
                             </div>
@@ -100,7 +91,7 @@ const coinsHandler = (()=>{
 
             // Shows that favorites are selected (Keeping them toggled after refresh)
             for (let i = start; i < end; i++) {
-                let favListArr = local.get("favList")
+                let favListArr = storageHandler.get("favList")
                 if (!favListArr) return;
                 for (let j = 0; j < favListArr.length; j++) {
                     const storedCoinID = favListArr[j][0]

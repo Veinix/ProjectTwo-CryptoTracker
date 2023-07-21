@@ -10,14 +10,13 @@ $(() => {
     // On nav pill click, perform action according to the tab
     $("#homeLink").click(async () => await handleHome());
     $("#reportsLink").click(() => handleReports())
-    $("#aboutLink").click(() => handleAbout()) 
 
     // Checking if the selected section is saved, if not, default is homeSection
     $("a.nav-link").removeClass("active");
     $("section").removeClass("d-flex").hide();
 
-    // On refresh/reload make sure the current selected section stays active
-    const selectedSection = local.get("selectedSection");
+    // On refresh/reload make sure the current selected section stays active and is shown
+    const selectedSection = storageHandler.get("selectedSection");
     if (selectedSection) {
         $(`a.nav-link[data-section="${selectedSection}"]`).addClass("active");
         $("#" + selectedSection).addClass("d-flex").show();
@@ -40,7 +39,7 @@ $(() => {
         $("#" + sectionID).show();
 
         // Keeping selected section on refresh
-        local.add("selectedSection", sectionID)
+        storageHandler.add("selectedSection", sectionID)
     })
 
     // Handles all processes related to the homepage.
@@ -57,9 +56,6 @@ $(() => {
         
     }
 
-    function handleAbout() {
-
-    }
 
     //# Scroll to Top button
     // When the users scroll down 50 px from the top, display the button

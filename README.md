@@ -17,19 +17,7 @@ This is my second project while at John Bryce - studying web development.
 
 ## Design Process and Methodology
 
-Since I am using Bootstrap to design this project, I am using a mobile-first design methodology. To get an idea of the layout of how I want to have the elements displayed on a page I made sketches in Google Drawings corresponding to the different items I was creating. For the different functions, I used draw.io to create a rough sketch of what the functions does and how it works.
-
-### Google Drawing Sketches
-
-Every element in the page is displayed using containers or blocks. They also must be placed either vertically or horizontally. Below are images of this idea. Each element will go into a box, blue for horizontal containers (Elements inside blue are aligned horizontally) or red for vertical containers (Elements inside red are aligned vertically).
-
-### Figma
-
-***Coming Soon***
-
-### Draw.io
-
-***Coming Soon***
+***More detailed information on the design process coming soon***
 
 ## Installation and Usage
 
@@ -53,7 +41,6 @@ Contributions are welcome! If you'd like to contribute to Crypto Tracker, please
 ## Known Bugs
 
 - Too many calls being made causes the API to temporarily block the IP
-- Coins with very long ids or names don't display correctly
 
 ## License
 

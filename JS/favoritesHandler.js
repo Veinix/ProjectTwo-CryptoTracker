@@ -2,9 +2,9 @@
 "use strict";
 
 $(()=> {
-    // Making sure that you can't have more than 5 favorites by refreshing the modal window
+    // Making sure that you can't cheat/bug/exploit to have more than 5 favorites by loading the modal window on page load
     $(()=>{
-        const favListArr = local.get("favList")
+        const favListArr = storageHandler.get("favList")
         if (!favListArr) return;
         if (favListArr.length >= 6) {
             modalHandler(favListArr)
@@ -13,8 +13,8 @@ $(()=> {
 
     //# Main Favorites
     function favoritesHandler(coinInfo, that) {
-        // If there is no favList, make one
-        let favListArr = local.get("favList")
+        // If there is no favList in local storage, initialize an empty array of the same name
+        let favListArr = storageHandler.get("favList")
         if (!favListArr) favListArr = []
         
         // When the switch is switched on, push it to the array, otherwise remove it from the array
@@ -29,7 +29,7 @@ $(()=> {
         }
 
         // Update the array in storage
-        local.add("favList", favListArr)
+        storageHandler.add("favList", favListArr)
 
         // If more than 5 switches are on, the sixth switch should trigger the modal
         if (favListArr.length > 5) {
@@ -37,15 +37,15 @@ $(()=> {
         }
     }
 
-    // Event listener for the switch on the coin-cards
+    // Event listener for the switches on the coin-cards
     $("#home--coins-container").on("change", ".form-check-input.coin-card--favtoggle", 
-        async function () {
+        function(){
             const coinID = $(this).attr("id").substring(7)
-            const coinName = $(`#subtitle-${coinID}`).html()
-            const coinSymbol = $(`#title-${coinID}`).html()
+            const coinName = $(`#name-${coinID}`).html()
+            const coinSymbol = $(`#symbol-${coinID}`).html()
             const coinInfo = [coinID, coinName, coinSymbol];
 
-            // Bringing this to the next function via that
+            // Bringing this to the next function via "that"
             const that = $(this)
             favoritesHandler(coinInfo, that)
         }
@@ -95,13 +95,13 @@ $(()=> {
 
     //# Discard Changes / Exit Buttons
     function discardChangesButton() {
-        const favListArr = local.get("favList")
+        const favListArr = storageHandler.get("favList")
         const lastCoinID = favListArr[favListArr.length - 1][0];
 
         if (favListArr.length > 5) {
             $(`#switch-${lastCoinID}`).prop("checked", false)
             favListArr.pop();
-            local.add("favList", favListArr);
+            storageHandler.add("favList", favListArr);
         }
     }
     $("#favoritesModal").on("click", "*.modal-discard", discardChangesButton)
@@ -111,37 +111,43 @@ $(()=> {
     function saveChangesButton() {
         // Get the values of the unchecked boxes and remove from the favListArr array
         const uncheckedCheckboxes = $('#favListContainer input[type="checkbox"]:not(:checked)')
-        const favListArr = local.get("favList")
+        const favListArr = storageHandler.get("favList")
 
         $(uncheckedCheckboxes).each(function () {
+            // The value of each checkbox is the ID of the coin
             const coinID = $(this).attr("value")
             $(`#switch-${coinID}`).prop("checked", false)
 
-            favListArr.forEach(favCoinData => {
-                if (coinID === favCoinData[0]) {
-                    const index = favListArr.indexOf(favCoinData)
-                    favListArr.splice(index, 1)
-                }
-            });
+            // Looping through the elements in each array, since indexOf doesn't work properly on complex arrays
+            for (let i = 0; i < favListArr.length; i++) {
+            const coinInfoArr = favListArr[i];
+            if (coinInfoArr[0] === coinID) favListArr.splice(i, 1);
+            }
         })
 
+        // TODO Fix the bug where the favList arr in storage gets pushed an array with a null value
         // Get the values of the checked boxes and ensure they are in the favListArr array
         const checkedCheckboxes = $('#favListContainer input[type="checkbox"]:checked')
         $(checkedCheckboxes).each(function () {
+            
             // Value of each checkbox is the ID of the coin
             const coinID = $(this).attr("value")
+            const coinName = $(`#subtitle-${coinID}`).html()
+            const coinSymbol = $(`#symbol-${coinID}`).html()
+
             $(`#switch-${coinID}`).prop("checked", true)
             
             // Checking if the favListArr contains each of the coins
-            const coinName = $(`#subtitle-${coinID}`).html()
-            const isCoinInFavList = favListArr.some(([id, name]) => (id === coinID) && (name === coinName));
-            if (!isCoinInFavList) {
-                favListArr.push([coinID,coinName]);
+            const isCoinInFavList = favListArr.some(([id, name, symbol]) => (id === coinID) && (name === coinName && symbol === coinSymbol));
+
+            // Ensures that none of these values are null or undefined before adding them to the array.
+            if (coinID && coinName && coinSymbol && !isCoinInFavList) {
+                favListArr.push([coinID, coinName, coinSymbol]);
             }
         });
         
         // Updating the list in storage
-        local.add("favList",favListArr)     
+        storageHandler.add("favList",favListArr)     
         
         // Resetting the save button "disabled" property
         $("#modal-save").prop("disabled", true);

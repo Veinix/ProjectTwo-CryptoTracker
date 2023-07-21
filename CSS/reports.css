@@ -1,6 +1,5 @@
-/* #chartContainer {
-    width: 900;
+#chartContainer {
+    width: 900px;
     min-width: 900px;
     height: 650px;
-    overflow: scroll;
-} */
+}

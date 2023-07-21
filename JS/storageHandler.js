@@ -2,7 +2,7 @@
 
 /**
  * More easily manipulate and read local storage data
- * @example local.add("key", value);
+ * @example storageHandler.add("key", value);
  * @method add -- Adds an entry by it's key and value to `localStorage`.
  * @method get -- Returns an entry from `localStorage` based on its key
  * @method remove -- Removes an entry from `localStorage` based on its key
@@ -10,12 +10,12 @@
  * @method test -- Tests if `localStorage` is available in the current environment
  * @method clean -- Removes all null or undefined keys from `localStorage`
  */ 
-const local = (() => {
+const storageHandler = (() => {
 
         /**
          * Adds an entry to `localStorage` via it's key-value pair. Does not return anything
          * 
-         * @example local.add("dataKey",dataValue);
+         * @example storageHandler.add("dataKey",dataValue);
          * @param {string} key - The key of the entry
          * @param {any} value - The value of the entry
          * @return {any} If `doesReturn` is set to true, returns the stored value
@@ -29,17 +29,12 @@ const local = (() => {
             // Stringifying value
             const data = JSON.stringify(value);
 
-            // Try-Catch block to catch errors such as "QuotaExceededError" (Local Storage limit reached)
+            // Try-Catch block to catch errors
             try {
                 localStorage.setItem(key, data);
             } catch (err) {
-                if (err instanceof DOMException && err.name === "QuotaExceededError") {
-                console.error(
-                    "Storage quota exceeded. Cannot add more data to localStorage. \n Recommendations: \n 1) Use lcl.remove(key) to remove data that is not needed anymore \n 2) Periodically delete information that is not needed \n 3) Use other methods of storage (sessionStorage, cookies, cache, IndexedDB");
-                } else {
-                // Handle other errors
+                // Handle  errors
                 console.error("An error occurred while accessing localStorage:", err);
-                }
             }
         }
 
@@ -47,7 +42,7 @@ const local = (() => {
         /**
         * Returns an entry from `localStorage` via it's `key`. The entry is parsed into it's original form (eg. Array) before return. If there is no such entry with the provided `key` it will return `null`
         * 
-        * @example local.get("dataKey",dataValue);
+        * @example storageHandler.get("dataKey",dataValue);
         * @param {string} key - Key of the entry
         * @returns {any} Entry stored
         */
@@ -57,10 +52,7 @@ const local = (() => {
                 throw new Error("Invalid key. Key must be a non-empty string.");
             }
 
-            // Convert key to string
-            key = key.toString();
             const entry = localStorage.getItem(key);
-            // TODO Check if ternary is needed
             return entry ? JSON.parse(entry) : null;
         }
 
@@ -68,7 +60,7 @@ const local = (() => {
         /**
         * Removes an entry from `localStorage` via it's `key`
         *
-        * @example local.remove("dataKey")
+        * @example storageHandler.remove("dataKey")
         * @param {string} key - Key of the entry
         */
         function remove(key){
@@ -87,56 +79,16 @@ const local = (() => {
         /**
          * Removes all entries in `localStorage`
          * 
-         * @example local.clear()
+         * @example storageHandler.clear()
         */
         function clear(){
             localStorage.clear();
-        }
-
-        
-        /**
-         * Tests to see if the environment supports `localStorage`. 
-         * 
-         * Certain environments that do not support the Web Storage API include older browsers or restricted environments
-         * 
-         * @example local.test()
-         * @returns {Boolean} Returns true if `localStorage` is supported
-        */
-        function test() {
-            if (typeof localStorage === "undefined" | localStorage === "null") {
-                console.error("Local storage is not supported in this browser/environment.");
-                return false;
-            } else {
-                console.log("%cEnvironment supports localStorage","color: #1F680B")
-                return true;
-            }
-        }
-
-        
-        /**
-         * Removes any entry whose key or value is empty/null/undefined, from `localStorage`
-         * 
-         * @example local.clean()
-        */
-        function clean() {
-            for (let i = 0; i < localStorage.length; i++) {
-                let key = localStorage.key(i);
-                if (!key) {
-                    localStorage.removeItem(key);
-                }
-                let value = localStorage.getItem(localStorage.key(i));
-                if (!value) {
-                    localStorage.removeItem(key);
-                }
-            }
         }
 
         return {
             add: add,  
             get: get,
             remove: remove,
-            clear: clear,
-            test: test,
-            clean: clean
+            clear: clear
         }
 })();
